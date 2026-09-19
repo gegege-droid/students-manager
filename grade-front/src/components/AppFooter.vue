@@ -1,5 +1,5 @@
 <template>
-  <footer class="app-footer">© 2025 XX大学 教务处 · 成绩管理系统（课程作业演示）</footer>
+  <footer class="app-footer">© 2025 XX中学 教务处 · 成绩管理系统（课程作业演示）</footer>
 </template>
 
 <style scoped>

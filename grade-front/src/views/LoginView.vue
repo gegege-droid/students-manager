@@ -15,24 +15,14 @@ const data = useScoreStore()
 const toast = useToast()
 
 const REMEMBER_KEY = 'grade-system:remember'
-const CAPTCHA_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 
-const form = reactive({ account: '', password: '', captcha: '', remember: false })
-const errors = reactive({ account: '', password: '', captcha: '' })
+const form = reactive({ account: '', password: '', remember: false })
+const errors = reactive({ account: '', password: '' })
 const loginError = ref('')
-const captchaCode = ref('')
 const forgotVisible = ref(false)
 const submitting = ref(false)
 
-function refreshCaptcha() {
-  captchaCode.value = Array.from(
-    { length: 4 },
-    () => CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)]
-  ).join('')
-}
-
 onMounted(() => {
-  refreshCaptcha()
   const remembered = localStorage.getItem(REMEMBER_KEY)
   if (remembered) {
     form.account = remembered
@@ -49,22 +39,12 @@ function clearError(key) {
 function validate() {
   errors.account = validateAccount(form.account)
   errors.password = validatePassword(form.password)
-  const code = form.captcha.trim().toUpperCase()
-  if (!code) errors.captcha = '请输入验证码'
-  else if (code !== captchaCode.value) errors.captcha = '验证码错误，请重新输入'
-  else errors.captcha = ''
-  return !errors.account && !errors.password && !errors.captcha
+  return !errors.account && !errors.password
 }
 
 function onSubmit() {
   loginError.value = ''
-  if (!validate()) {
-    if (errors.captcha) {
-      refreshCaptcha()
-      form.captcha = ''
-    }
-    return
-  }
+  if (!validate()) return
 
   submitting.value = true
   const result = user.login(form.account, form.password)
@@ -74,8 +54,6 @@ function onSubmit() {
   if (!result.ok) {
     loginError.value = result.message
     form.password = ''
-    form.captcha = ''
-    refreshCaptcha()
     return
   }
 
@@ -113,7 +91,8 @@ function onResetDemo() {
           class="input"
           :class="{ 'is-error': errors.account }"
           type="text"
-          placeholder="请输入学号或工号"
+          maxlength="12"
+          placeholder="请输入学号或工号（4~12 位）"
           autocomplete="username"
           @input="clearError('account')"
         />
@@ -134,27 +113,6 @@ function onResetDemo() {
           @keyup.enter="onSubmit"
         />
         <span v-if="errors.password" class="err">{{ errors.password }}</span>
-      </div>
-
-      <div class="field">
-        <label class="label" for="captcha">验证码 <span class="req">*</span></label>
-        <div class="captcha-row">
-          <input
-            id="captcha"
-            v-model.trim="form.captcha"
-            class="input"
-            :class="{ 'is-error': errors.captcha }"
-            type="text"
-            maxlength="4"
-            placeholder="请输入验证码"
-            @input="clearError('captcha')"
-            @keyup.enter="onSubmit"
-          />
-          <button type="button" class="captcha-box" title="点击刷新验证码" @click="refreshCaptcha">
-            {{ captchaCode }}
-          </button>
-        </div>
-        <span v-if="errors.captcha" class="err">{{ errors.captcha }}</span>
       </div>
 
       <div class="row-between options">
@@ -240,25 +198,6 @@ function onResetDemo() {
 
 .login-error {
   margin-bottom: 16px;
-}
-
-.captcha-row {
-  display: flex;
-  gap: 12px;
-}
-
-.captcha-box {
-  flex: 0 0 112px;
-  height: 36px;
-  border: 1px solid #cfd6de;
-  border-radius: var(--radius-control);
-  background: repeating-linear-gradient(45deg, #f2f3f5, #f2f3f5 5px, #e8eaed 5px, #e8eaed 10px);
-  color: #4a5568;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  cursor: pointer;
-  font-family: inherit;
 }
 
 .options {

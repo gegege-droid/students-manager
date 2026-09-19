@@ -13,24 +13,24 @@ export const accounts = [
     password: '123456',
     role: 'STUDENT',
     name: '张三',
-    classId: 'SE2101',
-    className: '软件工程2101班'
+    classId: 'G2101',
+    className: '高一(1)班'
   },
   {
     loginId: '2021003',
     password: '123456',
     role: 'STUDENT',
     name: '王五',
-    classId: 'SE2101',
-    className: '软件工程2101班'
+    classId: 'G2101',
+    className: '高一(1)班'
   },
   {
     loginId: '2021005',
     password: '123456',
     role: 'STUDENT',
     name: '钱七',
-    classId: 'SE2101',
-    className: '软件工程2101班'
+    classId: 'G2101',
+    className: '高一(1)班'
   },
   {
     loginId: 'T001',
@@ -39,7 +39,7 @@ export const accounts = [
     name: '李老师',
     classId: '',
     className: '',
-    manageClassIds: ['SE2101']
+    manageClassIds: ['G2101']
   }
 ]
 
@@ -47,48 +47,50 @@ export const accounts = [
 export const terms = ['2024-2025-1']
 
 /** 班级 */
-export const classes = [{ classId: 'SE2101', className: '软件工程2101班' }]
+export const classes = [{ classId: 'G2101', className: '高一(1)班' }]
 
 /** 学生名单（班主任 P4 批量录入的对象） */
 export const students = [
-  { studentId: '2021001', name: '张三', classId: 'SE2101', className: '软件工程2101班' },
-  { studentId: '2021002', name: '李四', classId: 'SE2101', className: '软件工程2101班' },
-  { studentId: '2021003', name: '王五', classId: 'SE2101', className: '软件工程2101班' },
-  { studentId: '2021004', name: '赵六', classId: 'SE2101', className: '软件工程2101班' },
-  { studentId: '2021005', name: '钱七', classId: 'SE2101', className: '软件工程2101班' },
-  { studentId: '2021006', name: '孙八', classId: 'SE2101', className: '软件工程2101班' }
+  { studentId: '2021001', name: '张三', classId: 'G2101', className: '高一(1)班' },
+  { studentId: '2021002', name: '李四', classId: 'G2101', className: '高一(1)班' },
+  { studentId: '2021003', name: '王五', classId: 'G2101', className: '高一(1)班' },
+  { studentId: '2021004', name: '赵六', classId: 'G2101', className: '高一(1)班' },
+  { studentId: '2021005', name: '钱七', classId: 'G2101', className: '高一(1)班' },
+  { studentId: '2021006', name: '孙八', classId: 'G2101', className: '高一(1)班' }
 ]
 
 /** 课程 */
 export const courses = [
-  { courseId: 'CS101', courseName: '数据结构', credit: 4, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
-  { courseId: 'CS102', courseName: '操作系统', credit: 3.5, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
-  { courseId: 'CS103', courseName: '计算机网络', credit: 3, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
-  { courseId: 'CS104', courseName: '数据库原理', credit: 3.5, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
-  { courseId: 'MA201', courseName: '概率论与数理统计', credit: 3, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
-  { courseId: 'EN101', courseName: '大学英语（三）', credit: 2, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
-  { courseId: 'PE101', courseName: '体育（三）', credit: 1, term: '2024-2025-1', teacherId: 'T001', courseType: 'ELECTIVE' },
-  { courseId: 'CS105', courseName: '软件工程导论', credit: 2, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' }
+  { courseId: 'CHN101', courseName: '语文', credit: 5, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'MAT101', courseName: '数学', credit: 5, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'ENG101', courseName: '英语', credit: 5, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'PHY101', courseName: '物理', credit: 4, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'CHM101', courseName: '化学', credit: 4, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'BIO101', courseName: '生物', credit: 4, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'POL101', courseName: '政治', credit: 3, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'HIS101', courseName: '历史', credit: 3, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' },
+  { courseId: 'GEO101', courseName: '地理', credit: 3, term: '2024-2025-1', teacherId: 'T001', courseType: 'REQUIRED' }
 ]
 
 /** 成绩记录（不写 totalScore / gpa，由 store 计算） */
 export const scores = [
   // 张三 —— 覆盖「优秀 / 良好 / 中等 / 不及格」四档，便于演示分数着色
-  { scoreId: 'SC20250101001', studentId: '2021001', courseId: 'CS101', term: '2024-2025-1', usualScore: 85, finalScore: 92, recorderId: 'T001', recordTime: '2025-01-10 16:20' },
-  { scoreId: 'SC20250101002', studentId: '2021001', courseId: 'CS102', term: '2024-2025-1', usualScore: 78, finalScore: 82, recorderId: 'T001', recordTime: '2025-01-10 16:22' },
-  { scoreId: 'SC20250101003', studentId: '2021001', courseId: 'CS103', term: '2024-2025-1', usualScore: 66, finalScore: 72, recorderId: 'T001', recordTime: '2025-01-10 16:24' },
-  { scoreId: 'SC20250101004', studentId: '2021001', courseId: 'CS104', term: '2024-2025-1', usualScore: 58, finalScore: 64, recorderId: 'T001', recordTime: '2025-01-10 16:26' },
-  { scoreId: 'SC20250101005', studentId: '2021001', courseId: 'MA201', term: '2024-2025-1', usualScore: 91, finalScore: 95, recorderId: 'T001', recordTime: '2025-01-10 16:28' },
-  { scoreId: 'SC20250101006', studentId: '2021001', courseId: 'EN101', term: '2024-2025-1', usualScore: 88, finalScore: 86, recorderId: 'T001', recordTime: '2025-01-10 16:30' },
-  { scoreId: 'SC20250101007', studentId: '2021001', courseId: 'PE101', term: '2024-2025-1', usualScore: 95, finalScore: 90, recorderId: 'T001', recordTime: '2025-01-10 16:32' },
-  { scoreId: 'SC20250101008', studentId: '2021001', courseId: 'CS105', term: '2024-2025-1', usualScore: 52, finalScore: 48, recorderId: 'T001', recordTime: '2025-01-10 16:34' },
+  { scoreId: 'SC20250101001', studentId: '2021001', courseId: 'CHN101', term: '2024-2025-1', usualScore: 85, finalScore: 92, recorderId: 'T001', recordTime: '2025-01-10 16:20' },
+  { scoreId: 'SC20250101002', studentId: '2021001', courseId: 'MAT101', term: '2024-2025-1', usualScore: 78, finalScore: 82, recorderId: 'T001', recordTime: '2025-01-10 16:22' },
+  { scoreId: 'SC20250101003', studentId: '2021001', courseId: 'ENG101', term: '2024-2025-1', usualScore: 66, finalScore: 72, recorderId: 'T001', recordTime: '2025-01-10 16:24' },
+  { scoreId: 'SC20250101004', studentId: '2021001', courseId: 'PHY101', term: '2024-2025-1', usualScore: 58, finalScore: 64, recorderId: 'T001', recordTime: '2025-01-10 16:26' },
+  { scoreId: 'SC20250101005', studentId: '2021001', courseId: 'CHM101', term: '2024-2025-1', usualScore: 91, finalScore: 95, recorderId: 'T001', recordTime: '2025-01-10 16:28' },
+  { scoreId: 'SC20250101006', studentId: '2021001', courseId: 'BIO101', term: '2024-2025-1', usualScore: 88, finalScore: 86, recorderId: 'T001', recordTime: '2025-01-10 16:30' },
+  { scoreId: 'SC20250101007', studentId: '2021001', courseId: 'POL101', term: '2024-2025-1', usualScore: 95, finalScore: 90, recorderId: 'T001', recordTime: '2025-01-10 16:32' },
+  { scoreId: 'SC20250101008', studentId: '2021001', courseId: 'HIS101', term: '2024-2025-1', usualScore: 52, finalScore: 48, recorderId: 'T001', recordTime: '2025-01-10 16:34' },
+  { scoreId: 'SC20250101009', studentId: '2021001', courseId: 'GEO101', term: '2024-2025-1', usualScore: 82, finalScore: 88, recorderId: 'T001', recordTime: '2025-01-10 16:36' },
 
   // 王五
-  { scoreId: 'SC20250101011', studentId: '2021003', courseId: 'CS101', term: '2024-2025-1', usualScore: 76, finalScore: 81, recorderId: 'T001', recordTime: '2025-01-10 16:40' },
-  { scoreId: 'SC20250101012', studentId: '2021003', courseId: 'CS103', term: '2024-2025-1', usualScore: 66, finalScore: 72, recorderId: 'T001', recordTime: '2025-01-10 16:42' },
+  { scoreId: 'SC20250101011', studentId: '2021003', courseId: 'CHN101', term: '2024-2025-1', usualScore: 76, finalScore: 81, recorderId: 'T001', recordTime: '2025-01-10 16:40' },
+  { scoreId: 'SC20250101012', studentId: '2021003', courseId: 'ENG101', term: '2024-2025-1', usualScore: 66, finalScore: 72, recorderId: 'T001', recordTime: '2025-01-10 16:42' },
 
   // 钱七
-  { scoreId: 'SC20250101021', studentId: '2021005', courseId: 'CS104', term: '2024-2025-1', usualScore: 58, finalScore: 64, recorderId: 'T001', recordTime: '2025-01-10 16:46' }
+  { scoreId: 'SC20250101021', studentId: '2021005', courseId: 'PHY101', term: '2024-2025-1', usualScore: 58, finalScore: 64, recorderId: 'T001', recordTime: '2025-01-10 16:46' }
 ]
 
 /** 查分申请 */
@@ -96,7 +98,7 @@ export const appeals = [
   {
     appealId: 'AP20250115001',
     studentId: '2021001',
-    courseId: 'CS105',
+    courseId: 'HIS101',
     term: '2024-2025-1',
     originalScore: 50,
     reason: '平时分已按要求提交全部作业，请老师复核登分情况',
@@ -111,7 +113,7 @@ export const appeals = [
   {
     appealId: 'AP20250115002',
     studentId: '2021003',
-    courseId: 'CS103',
+    courseId: 'ENG101',
     term: '2024-2025-1',
     originalScore: 70,
     reason: '期末卷面估分 78，与公布成绩差距较大',
@@ -126,7 +128,7 @@ export const appeals = [
   {
     appealId: 'AP20250115003',
     studentId: '2021005',
-    courseId: 'CS104',
+    courseId: 'PHY101',
     term: '2024-2025-1',
     originalScore: 62,
     reason: '平时分一项显示为空，疑似漏录',
@@ -141,7 +143,7 @@ export const appeals = [
   {
     appealId: 'AP20241220003',
     studentId: '2021001',
-    courseId: 'CS101',
+    courseId: 'CHN101',
     term: '2024-2025-1',
     originalScore: 89,
     reason: '期末成绩与预期差距较大',
@@ -156,7 +158,7 @@ export const appeals = [
   {
     appealId: 'AP20241218001',
     studentId: '2021001',
-    courseId: 'EN101',
+    courseId: 'BIO101',
     term: '2024-2025-1',
     originalScore: 87,
     reason: '听力部分疑似未计入总分',
@@ -176,7 +178,7 @@ export const changeLogs = [
     logId: 'LOG20250116001',
     scoreId: 'SC20250101004',
     studentId: '2021001',
-    courseId: 'CS104',
+    courseId: 'PHY101',
     term: '2024-2025-1',
     oldUsual: 58,
     oldFinal: 60,
@@ -193,7 +195,7 @@ export const changeLogs = [
     logId: 'LOG20241221001',
     scoreId: 'SC20250101001',
     studentId: '2021001',
-    courseId: 'CS101',
+    courseId: 'CHN101',
     term: '2024-2025-1',
     oldUsual: 80,
     oldFinal: 92,

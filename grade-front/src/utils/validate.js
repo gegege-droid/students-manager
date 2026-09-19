@@ -3,10 +3,10 @@
  * 每个函数返回错误文案；返回空字符串表示通过。
  */
 
-/** 账号：6~12 位字母或数字 */
+/** 账号：4~12 位字母或数字（学号 7 位、工号如 T001 为 4 位） */
 export function validateAccount(value) {
   if (!value) return '请输入学号或工号'
-  if (!/^[A-Za-z0-9]{6,12}$/.test(value)) return '请输入学号或工号（6~12 位字母或数字）'
+  if (!/^[A-Za-z0-9]{4,12}$/.test(value)) return '请输入学号或工号（4~12 位字母或数字）'
   return ''
 }
 
