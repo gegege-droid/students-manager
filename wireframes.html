@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>成绩管理系统 · 原型线框图总览（6 页）</title>
+<style>
+  /* ============ 页面外壳 ============ */
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px 20px 60px;
+    background: #eef0f3;
+    color: #2b2f36;
+    font: 14px/1.6 "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  header.doc {
+    background: #fff; border: 1px solid #d8dbe0; border-radius: 8px;
+    padding: 22px 26px; margin-bottom: 18px;
+  }
+  header.doc h1 { margin: 0 0 6px; font-size: 22px; }
+  header.doc p { margin: 4px 0; color: #6b7280; font-size: 13px; }
+  nav.jump {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+  }
+  nav.jump a {
+    text-decoration: none; color: #3f5c7d; background: #f2f5f9;
+    border: 1px solid #d3dced; border-radius: 999px;
+    padding: 4px 12px; font-size: 12px;
+  }
+  nav.jump a:hover { background: #e6eef8; }
+
+  .legend {
+    background: #fff; border: 1px solid #d8dbe0; border-radius: 8px;
+    padding: 14px 26px; margin-bottom: 22px; font-size: 12px; color: #555b63;
+  }
+  .legend code {
+    background: #f2f3f5; border: 1px solid #e2e4e8; border-radius: 3px;
+    padding: 1px 5px; font-size: 12px;
+  }
+
+  /* ============ 每一页的区块 ============ */
+  section.wf { margin-bottom: 34px; }
+  section.wf > h2 {
+    font-size: 17px; margin: 0 0 4px; padding-left: 2px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  section.wf > h2 .tag {
+    font-size: 11px; font-weight: 400; color: #4a6b95;
+    background: #e9f0f9; border: 1px solid #cfdcec;
+    border-radius: 999px; padding: 1px 9px;
+  }
+  section.wf > .sub {
+    font-size: 12px; color: #6b7280; margin: 0 0 10px; padding-left: 2px;
+  }
+
+  /* ============ 线框画布（紧凑示意，按 1440×900 等比缩排） ============ */
+  .screen {
+    position: relative; width: 860px; height: 538px; overflow: hidden;
+    background: #f7f8fa; border: 1px solid #c9cdd3; border-radius: 6px;
+    color: #2b2f36; font-size: 12px; line-height: 1.35;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  }
+  .screen.flat { height: auto; }
+  .ph { color: #9aa0a8; }
+  .muted { color: #8a9099; }
+  .link { color: #4a6b95; }
+  .req { color: #c05b5b; }
+  .mono { font-variant-numeric: tabular-nums; }
+
+  /* 顶栏 / 侧栏（对应母版） */
+  .topbar {
+    height: 38px; background: #eceef1; border-bottom: 1px solid #d5d8dd;
+    display: flex; align-items: center; gap: 10px; padding: 0 14px;
+  }
+  .topbar .brand { font-weight: 700; color: #3c4753; }
+  .topbar .spacer { flex: 1; }
+  .topbar .who { color: #4b5563; }
+  .body-flex { display: flex; height: 500px; }
+  .side {
+    width: 143px; background: #f2f3f5; border-right: 1px solid #d5d8dd;
+    padding: 10px 0; flex: 0 0 143px;
+  }
+  .side .nav {
+    padding: 8px 14px; color: #59606a; border-left: 3px solid transparent;
+  }
+  .side .nav.active {
+    background: #e4ebf5; color: #2f4d73; font-weight: 600;
+    border-left-color: #6f8fb8;
+  }
+  .main { flex: 1; padding: 12px 14px; overflow: hidden; }
+
+  /* 页面标题 */
+  .pgt { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .pgt .crumb { font-size: 11px; font-weight: 400; color: #8a9099; margin-left: 8px; }
+
+  /* 卡片 */
+  .card {
+    background: #fff; border: 1px solid #dde0e4; border-radius: 5px;
+    padding: 8px 10px; margin-bottom: 8px;
+  }
+  .card.tight { padding: 7px 9px; }
+  .card.stat-card { background: #eef3fa; border-color: #d5e0ee; }
+
+  /* 表单占位 */
+  .row { display: flex; align-items: center; gap: 7px; }
+  .row.between { justify-content: space-between; }
+  .row.wrap { flex-wrap: wrap; }
+  .fld { margin-bottom: 6px; }
+  .lb { font-size: 11px; color: #5c636c; margin-bottom: 2px; display: block; }
+  .inp {
+    height: 24px; border: 1px solid #cfd4da; border-radius: 3px;
+    background: #fff; display: flex; align-items: center; padding: 0 7px;
+    color: #9aa0a8; font-size: 11px;
+  }
+  .inp.solid { color: #3a4048; }
+  .inp.ro { background: #f4f5f7; color: #5c636c; }
+  .inp.err { border-color: #c05b5b; }
+  .inp.area { height: 44px; align-items: flex-start; padding-top: 4px; }
+  .w110 { width: 110px; } .w140 { width: 140px; } .w150 { width: 150px; }
+  .w180 { width: 180px; } .w200 { width: 200px; } .w220 { width: 220px; }
+  .w240 { width: 240px; } .w300 { width: 300px; } .w90 { width: 90px; }
+  .grow { flex: 1; }
+  .btn {
+    height: 24px; padding: 0 12px; border: 1px solid #cfd4da; border-radius: 3px;
+    background: #fff; color: #3a4048; display: inline-flex; align-items: center;
+    font-size: 11px; white-space: nowrap;
+  }
+  .btn.primary { background: #6f8fb8; border-color: #6f8fb8; color: #fff; }
+  .btn.ghost { border: none; background: none; color: #4a6b95; padding: 0 4px; }
+  .btn.block { width: 100%; justify-content: center; height: 30px; font-size: 13px; font-weight: 600; }
+  .btn.dis { opacity: .45; }
+  .tag {
+    font-size: 10px; border-radius: 999px; padding: 1px 7px;
+    background: #eef1f4; color: #5c636c; border: 1px solid #dfe3e8;
+  }
+  .tag.ok { background: #eaf4ee; color: #3f7d55; border-color: #d3e6da; }
+  .tag.warn { background: #fbf1e6; color: #a9702e; border-color: #eeddca; }
+  .tag.bad { background: #fceeee; color: #a95050; border-color: #eed6d6; }
+  .hint { font-size: 10px; color: #9aa0a8; }
+  .errline { font-size: 10px; color: #c05b5b; }
+  .errbar {
+    background: #fceeee; border: 1px solid #eed6d6; color: #a95050;
+    font-size: 11px; border-radius: 3px; padding: 4px 8px; margin-bottom: 8px;
+  }
+  .warnbar {
+    background: #fdf4e9; border: 1px solid #eeddca; color: #8f6224;
+    font-size: 11px; border-radius: 3px; padding: 4px 9px; margin-bottom: 8px;
+  }
+  .toolbar {
+    display: flex; align-items: center; gap: 7px; margin-bottom: 9px;
+    font-size: 11px; color: #5c636c;
+  }
+  .stats { display: flex; gap: 26px; padding: 9px 13px; }
+  .stat { display: flex; flex-direction: column; }
+  .stat b { font-size: 15px; color: #2f4d73; }
+  .stat span { font-size: 10px; color: #7b828a; }
+
+  /* 表格 */
+  table.tbl {
+    width: 100%; border-collapse: collapse; font-size: 11px;
+    table-layout: fixed;
+  }
+  table.tbl th {
+    background: #eef0f3; color: #5c636c; font-weight: 600;
+    text-align: left; padding: 4px 6px; border-bottom: 1px solid #dde0e4;
+    white-space: nowrap;
+  }
+  table.tbl td {
+    padding: 4px 6px; border-bottom: 1px solid #eceef1;
+    color: #3a4048; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  table.tbl tbody tr:nth-child(even) { background: #fafbfc; }
+  table.tbl .c { text-align: center; }
+  table.tbl td.bad { color: #b04a4a; font-weight: 700; }
+  table.tbl td.warnv { color: #a9702e; }
+  table.tbl td.okv { color: #3f7d55; }
+  table.tbl .cellinp {
+    border: 1px solid #cfd4da; border-radius: 3px; height: 18px;
+    background: #fff; display: block; width: 100%;
+  }
+  .tblnote { font-size: 10px; color: #9aa0a8; margin-top: 5px; }
+  .pager { text-align: right; font-size: 11px; color: #7b828a; margin-top: 6px; }
+
+  /* 空状态 */
+  .empty {
+    border: 1px dashed #d3d7dc; border-radius: 5px; background: #fbfcfd;
+    padding: 34px 10px; text-align: center; color: #8a9099; margin-bottom: 9px;
+  }
+  .empty .big { font-size: 13px; color: #5c636c; margin-bottom: 3px; }
+  .empty .ico {
+    width: 26px; height: 26px; border: 1px solid #cfd4da; border-radius: 50%;
+    margin: 0 auto 8px; background: #f2f3f5;
+  }
+
+  /* 登录页 */
+  .login-screen { background: #eaeff6; }
+  .login-card {
+    position: absolute; left: 50%; top: 70px; transform: translateX(-50%);
+    width: 290px; background: #fff; border: 1px solid #dde0e4;
+    border-radius: 7px; padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .logo-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .logo {
+    width: 26px; height: 26px; border-radius: 6px; background: #e4ebf5;
+    border: 1px solid #cfdcec;
+  }
+  .sysname { font-size: 15px; font-weight: 700; }
+  .syssub { font-size: 11px; color: #8a9099; margin-bottom: 9px; }
+  .hr { height: 1px; background: #eceef1; margin: 9px 0 11px; }
+  .captcha {
+    width: 74px; height: 24px; border: 1px solid #cfd4da; border-radius: 3px;
+    background: repeating-linear-gradient(45deg,#f2f3f5,#f2f3f5 4px,#e8eaed 4px,#e8eaed 8px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: #8a9099; letter-spacing: 2px;
+  }
+  .pagefoot {
+    position: absolute; left: 0; right: 0; bottom: 12px;
+    text-align: center; font-size: 10px; color: #9aa0a8;
+  }
+
+  /* 弹窗放样 */
+  .modal-stage { position: relative; width: 860px; height: 410px; }
+  .modal-stage .backdrop {
+    position: absolute; inset: 0; background: #f2f4f7; border: 1px solid #c9cdd3;
+    border-radius: 6px; background-image: linear-gradient(#e9ecef 1px, transparent 1px);
+    background-size: 100% 26px;
+  }
+  .modal {
+    position: absolute; left: 50%; top: 16px; transform: translateX(-50%);
+    width: 430px; background: #fff; border: 1px solid #c9cdd3; border-radius: 7px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.14); padding: 0;
+  }
+  .modal .mhead {
+    padding: 9px 13px; border-bottom: 1px solid #eceef1; font-weight: 700;
+    font-size: 13px; display: flex; justify-content: space-between;
+  }
+  .modal .mbody { padding: 11px 13px; }
+  .modal .mfoot {
+    padding: 9px 13px; border-top: 1px solid #eceef1;
+    display: flex; justify-content: flex-end; gap: 7px; background: #fafbfc;
+  }
+  .kv { display: flex; gap: 8px; margin-bottom: 4px; font-size: 11px; }
+  .kv .k { width: 58px; color: #7b828a; }
+  .kv .v { color: #3a4048; }
+  .radio-row { display: flex; gap: 16px; font-size: 11px; margin: 3px 0 6px; }
+
+  /* 注释 */
+  .notes {
+    width: 860px; background: #fff; border: 1px solid #d8dbe0;
+    border-radius: 6px; padding: 12px 16px; margin-top: 9px;
+    font-size: 12px; color: #4b5563;
+  }
+  .notes h3 { margin: 0 0 6px; font-size: 12.5px; color: #2f4d73; }
+  .notes ul { margin: 0 0 8px; padding-left: 18px; }
+  .notes li { margin: 2px 0; }
+  .notes .cols { display: flex; gap: 26px; }
+  .notes .cols > div { flex: 1; }
+  .screen-label {
+    position: absolute; right: 8px; bottom: 5px; font-size: 10px; color: #b0b6bd;
+    background: rgba(255,255,255,.85); border-radius: 3px; padding: 0 5px;
+  }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    nav.jump, .legend { display: none; }
+    .wrap { max-width: none; }
+    section.wf { page-break-inside: avoid; break-inside: avoid; }
+    .screen { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="doc">
+  <h1>成绩管理系统 · 原型线框图总览</h1>
+  <p>页面尺寸 1440 × 900 ｜ 灰度线框，非高保真 ｜ 共 6 个功能页面 + 1 个弹窗放样</p>
+  <p>配套文档：<code>docs/03-wireframe-spec.md</code>（逐页元件、字段、交互说明） ｜ <code>docs/02-axure-guide.md</code>（Axure 制作步骤）</p>
+  <nav class="jump">
+    <a href="#common">公共框架</a>
+    <a href="#p1">P1 学生登录</a>
+    <a href="#p2">P2 成绩查询</a>
+    <a href="#p3">P3 申请查分</a>
+    <a href="#p4">P4 添加学生成绩</a>
+    <a href="#p5">P5 修改学生成绩</a>
+    <a href="#p6">P6 受理查分申请</a>
+    <a href="#modal">受理弹窗放样</a>
+  </nav>
+</header>
+
+<div class="legend">
+  <b>图例：</b>
+  <code>灰色填充块</code> = 输入控件占位　
+  <code>深蓝填充</code> = 主操作按钮　
+  <code>浅蓝底卡片</code> = 统计 / 强调区　
+  <code>虚线框</code> = 空状态　
+  <code>橙/绿/红标签</code> = 状态枚举　
+  <code>▾</code> = 下拉框　
+  <code>☐</code> = 复选框　
+  <code>◉ ○</code> = 单选
+  <br>
+  <span class="muted">各线框按 1440×900 等比缩排，用于确认<b>布局、层级与信息密度</b>；精确尺寸与元件命名见 <code>03-wireframe-spec.md</code> 的区域说明表。</span>
+</div>
+
+<!-- ============================================================ -->
+<!-- 公共框架 -->
+<!-- ============================================================ -->
+<section class="wf" id="common">
+  <h2>公共框架 <span class="tag">母版 · 所有登录后页面共用</span></h2>
+  <p class="sub">对应 Axure 母版：M_顶部导航 / M_侧边菜单 / M_页脚。做成母版后 5 个页面复用，保证风格统一。</p>
+
+  <div class="screen">
+    <div class="topbar">
+      <span class="brand">▤ 成绩管理系统</span>
+      <span class="spacer"></span>
+      <span class="muted">🔔</span>
+      <span class="who">欢迎，张三</span>
+      <span class="link">退出登录</span>
+    </div>
+    <div class="body-flex">
+      <aside class="side">
+        <div class="nav active">成绩查询</div>
+        <div class="nav">申请查分</div>
+        <div class="nav">个人中心</div>
+      </aside>
+      <main class="main">
+        <div class="pgt">成绩查询 <span class="crumb">首页 / 成绩查询</span></div>
+        <div class="card tight">
+          <div class="row">
+            <span class="lb" style="margin:0">学期</span>
+            <div class="inp w140">2024-2025-1 ▾</div>
+            <span class="lb" style="margin:0">课程</span>
+            <div class="inp w200">课程名称 / 课程号</div>
+            <div class="btn primary">查询</div>
+            <div class="btn">重置</div>
+          </div>
+        </div>
+        <div class="card stat-card stats">
+          <div class="stat"><b>8</b><span>已修课程</span></div>
+          <div class="stat"><b>22</b><span>总学分</span></div>
+          <div class="stat"><b>77.9</b><span>平均分</span></div>
+          <div class="stat"><b>2.76</b><span>平均绩点</span></div>
+        </div>
+        <div class="card tight" style="padding:0 0 0 0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th class="c" style="width:36px">序号</th>
+                <th style="width:70px">课程号</th>
+                <th style="width:130px">课程名称</th>
+                <th class="c" style="width:44px">学分</th>
+                <th class="c" style="width:62px">平时</th>
+                <th class="c" style="width:62px">期末</th>
+                <th class="c" style="width:62px">总评</th>
+                <th class="c" style="width:50px">绩点</th>
+                <th class="c" style="width:78px">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="c">1</td><td>CS101</td><td>数据结构</td><td class="c">4</td><td class="c">85</td><td class="c">92</td><td class="c okv">89</td><td class="c">3.9</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">2</td><td>CS102</td><td>操作系统</td><td class="c">3.5</td><td class="c">78</td><td class="c">82</td><td class="c okv">80</td><td class="c">3.0</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">3</td><td>CS103</td><td>计算机网络</td><td class="c">3</td><td class="c">66</td><td class="c">72</td><td class="c warnv">70</td><td class="c">2.0</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">4</td><td>CS105</td><td>软件工程导论</td><td class="c">2</td><td class="c">52</td><td class="c">48</td><td class="c bad">50</td><td class="c">0</td><td class="c link">申请查分</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager">共 8 条　‹　1　›</div>
+      </main>
+    </div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <h3>框架分区（①②③④⑤ 与设计说明一致）</h3>
+    <ul>
+      <li>① <b>顶部导航</b> 高 64：Logo + 系统名（左）；消息铃、当前用户、退出登录（右）。固定顶部。</li>
+      <li>② <b>侧边菜单</b> 宽 240：按角色渲染不同菜单项，当前项左侧主色竖条 + 浅蓝底高亮。</li>
+      <li>③ <b>标题区</b> 高 56：页面标题（20px 粗体）+ 面包屑（12px 次要色）。</li>
+      <li>④ <b>内容卡片</b>：白底、圆角 8、边框 #E2E8F0，页面底色 #F7FAFC 形成层次。</li>
+      <li>⑤ <b>页脚</b>：「© 2025 XX大学 教务处」居中，12px 次要色。</li>
+    </ul>
+    <p class="muted" style="margin:0">一致性要求：所有页面尺寸一致、边距 24、按钮高 36、表格行高 44、错误提示在输入框正下方 12px 红字。</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- P1 -->
+<!-- ============================================================ -->
+<section class="wf" id="p1">
+  <h2>P1 · 学生登录页面 <span class="tag">学生 / 班主任</span></h2>
+  <p class="sub">入口：系统起始页 ｜ 出口：学生 → P2 成绩查询；班主任 → P6 受理查分申请 ｜ FR-P1-01 ~ 07</p>
+
+  <div class="screen login-screen">
+    <div class="login-card">
+      <div class="logo-row"><div class="logo"></div><div class="sysname">成绩管理系统</div></div>
+      <div class="syssub">学生 / 班主任 登录</div>
+      <div class="hr"></div>
+      <div class="errbar">⚠ 账号或密码错误，请重新输入</div>
+      <div class="fld">
+        <span class="lb">账号 <span class="req">*</span></span>
+        <div class="inp">请输入学号或工号</div>
+      </div>
+      <div class="fld">
+        <span class="lb">密码 <span class="req">*</span></span>
+        <div class="inp">请输入密码</div>
+      </div>
+      <div class="fld">
+        <span class="lb">验证码 <span class="req">*</span></span>
+        <div class="row">
+          <div class="inp grow">请输入验证码</div>
+          <div class="captcha">A7K9</div>
+        </div>
+      </div>
+      <div class="row between" style="margin:9px 0 11px">
+        <span style="font-size:11px;color:#5c636c">☐ 记住账号</span>
+        <span class="link" style="font-size:11px">忘记密码？</span>
+      </div>
+      <div class="btn primary block">登 录</div>
+    </div>
+    <div class="pagefoot">© 2025 XX大学 教务处　｜　测试账号：学生 2021001 / 123456　　班主任 T001 / 123456</div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>页面结构</h3>
+        <ul>
+          <li>全屏浅蓝渐变背景 + 居中登录卡片 480×440（x=480 精确对称）</li>
+          <li>卡片内：Logo 与系统名 → 副标题 → 分隔线 → 错误提示条 → 账号 → 密码 → 验证码 → 记住账号/忘记密码 → 登录按钮</li>
+          <li>底部居中版权与测试账号提示</li>
+        </ul>
+      </div>
+      <div>
+        <h3>关键交互</h3>
+        <ul>
+          <li>空值校验：对应输入框下方红字 + 红边框，不提交</li>
+          <li>回车提交：密码框「按键松开 = Enter」触发登录</li>
+          <li>角色分流：2021001 → P2；T001 → P6</li>
+          <li>认证失败：卡片内红底提示条，密码框清空、账号保留</li>
+          <li>验证码图片单击刷新并清空输入</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- P2 -->
+<!-- ============================================================ -->
+<section class="wf" id="p2">
+  <h2>P2 · 成绩查询页面 <span class="tag">学生主入口</span></h2>
+  <p class="sub">入口：P1 登录成功 ｜ 出口：P3 申请查分（带课程号）｜ FR-P2-01 ~ 10</p>
+
+  <div class="screen">
+    <div class="topbar">
+      <span class="brand">▤ 成绩管理系统</span>
+      <span class="spacer"></span>
+      <span class="who">欢迎，张三</span>
+      <span class="link">退出登录</span>
+    </div>
+    <div class="body-flex">
+      <aside class="side">
+        <div class="nav active">成绩查询</div>
+        <div class="nav">申请查分</div>
+        <div class="nav">个人中心</div>
+      </aside>
+      <main class="main">
+        <div class="pgt">成绩查询 <span class="crumb">首页 / 成绩查询</span></div>
+
+        <div class="card tight">
+          <div class="row">
+            <span class="lb" style="margin:0">学期</span>
+            <div class="inp w140">2024-2025-1 ▾</div>
+            <span class="lb" style="margin:0">课程</span>
+            <div class="inp w200">课程名称 / 课程号</div>
+            <div class="btn primary">查询</div>
+            <div class="btn">重置</div>
+          </div>
+        </div>
+
+        <div class="card stat-card stats">
+          <div class="stat"><b>8</b><span>已修课程</span></div>
+          <div class="stat"><b>22</b><span>总学分</span></div>
+          <div class="stat"><b>77.9</b><span>平均分</span></div>
+          <div class="stat"><b>2.76</b><span>平均绩点</span></div>
+        </div>
+
+        <div class="card tight" style="padding:0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th class="c" style="width:36px">序号</th>
+                <th style="width:66px">课程号</th>
+                <th style="width:126px">课程名称</th>
+                <th class="c" style="width:42px">学分</th>
+                <th class="c" style="width:58px">平时</th>
+                <th class="c" style="width:58px">期末</th>
+                <th class="c" style="width:58px">总评</th>
+                <th class="c" style="width:46px">绩点</th>
+                <th class="c" style="width:74px">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="c">1</td><td>CS101</td><td>数据结构</td><td class="c">4</td><td class="c">85</td><td class="c">92</td><td class="c okv">89</td><td class="c">3.9</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">2</td><td>CS102</td><td>操作系统</td><td class="c">3.5</td><td class="c">78</td><td class="c">82</td><td class="c okv">80</td><td class="c">3.0</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">3</td><td>CS103</td><td>计算机网络</td><td class="c">3</td><td class="c">66</td><td class="c">72</td><td class="c warnv">70</td><td class="c">2.0</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">4</td><td>CS104</td><td>数据库原理</td><td class="c">3.5</td><td class="c">58</td><td class="c">64</td><td class="c warnv">62</td><td class="c">1.2</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">5</td><td>MA201</td><td>概率论与数理统计</td><td class="c">3</td><td class="c">91</td><td class="c">95</td><td class="c okv">93</td><td class="c">4.3</td><td class="c link">申请查分</td></tr>
+              <tr><td class="c">6</td><td>CS105</td><td>软件工程导论</td><td class="c">2</td><td class="c">52</td><td class="c">48</td><td class="c bad">50 不及格</td><td class="c">0</td><td class="c link">申请查分</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager">共 8 条　‹　1　›</div>
+      </main>
+    </div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>关键元件</h3>
+        <ul>
+          <li><code>ddl_学期</code>、<code>ipt_关键字</code>、<code>btn_查询</code>、<code>btn_重置</code></li>
+          <li><code>区域_统计</code>：已修课程 / 总学分 / 平均分 / 平均绩点</li>
+          <li><b>中继器</b> <code>tb_成绩列表</code>：9 列，行内「申请查分」</li>
+          <li><code>dp_空状态</code>：虚线框 + 图标 + 「暂无成绩数据」</li>
+        </ul>
+      </div>
+      <div>
+        <h3>关键规则</h3>
+        <ul>
+          <li>总评 = round(平时×0.4 + 期末×0.6)，<b>只读不填</b></li>
+          <li>着色：≥80 绿、60~79 橙、&lt;60 红加粗 + 「不及格」文字标签（颜色不是唯一信息载体）</li>
+          <li>点「申请查分」把课程号写入变量 <code>SelectedCourse</code> 并跳 P3；状态为「查分中」时按钮置灰</li>
+          <li>筛选无结果时，空状态辅助文案改为「没有找到符合『数据结构』的成绩」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- P3 -->
+<!-- ============================================================ -->
+<section class="wf" id="p3">
+  <h2>P3 · 申请查分页面 <span class="tag">学生</span></h2>
+  <p class="sub">入口：P2 行内「申请查分」／侧边菜单 ｜ 出口：停留本页（提交后刷新列表）｜ FR-P3-01 ~ 09</p>
+
+  <div class="screen">
+    <div class="topbar">
+      <span class="brand">▤ 成绩管理系统</span>
+      <span class="spacer"></span>
+      <span class="who">欢迎，张三</span>
+      <span class="link">退出登录</span>
+    </div>
+    <div class="body-flex">
+      <aside class="side">
+        <div class="nav">成绩查询</div>
+        <div class="nav active">申请查分</div>
+        <div class="nav">个人中心</div>
+      </aside>
+      <main class="main">
+        <div class="pgt">申请查分 <span class="crumb">首页 / 申请查分</span></div>
+
+        <div class="card">
+          <div style="font-weight:700;font-size:12px;margin-bottom:7px">填写查分申请</div>
+          <div class="row" style="gap:10px;align-items:flex-start">
+            <div style="width:230px">
+              <div class="fld">
+                <span class="lb">课程 <span class="req">*</span></span>
+                <div class="inp solid">软件工程导论（CS105） ▾</div>
+              </div>
+              <div class="fld">
+                <span class="lb">原成绩（只读）</span>
+                <div class="inp ro">总评 50　（平时 52 / 期末 48）</div>
+              </div>
+            </div>
+            <div class="grow">
+              <div class="fld">
+                <span class="lb">申请理由 <span class="req">*</span>（10~200 字）</span>
+                <div class="inp area solid">平时分已按要求提交全部作业，请老师复核登分情况…</div>
+                <div class="row between" style="margin-top:2px">
+                  <span class="errline">请填写 10~200 字的申请理由</span>
+                  <span class="hint">28/200</span>
+                </div>
+              </div>
+              <div class="row wrap" style="gap:6px;margin:2px 0 8px">
+                <span class="tag">疑似登分错误</span>
+                <span class="tag">与预期差距大</span>
+                <span class="tag">平时分缺失</span>
+              </div>
+              <div class="row">
+                <div class="btn primary">提交申请</div>
+                <div class="btn">清空</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-weight:700;font-size:12px;margin:2px 0 6px">我的查分申请</div>
+        <div class="card tight" style="padding:0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:100px">申请编号</th>
+                <th style="width:104px">课程名称</th>
+                <th class="c" style="width:48px">原成绩</th>
+                <th style="width:170px">申请理由</th>
+                <th style="width:100px">申请时间</th>
+                <th class="c" style="width:60px">状态</th>
+                <th class="c" style="width:66px">操作 / 结果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="link">AP20250115001</td><td>软件工程导论</td><td class="c bad">50</td>
+                <td>平时分已按要求提交全部作业，请老师…</td><td>2025-01-15 14:30</td>
+                <td class="c"><span class="tag warn">待受理</span></td><td class="c muted">—</td>
+              </tr>
+              <tr>
+                <td class="link">AP20241220003</td><td>数据结构</td><td class="c">89</td>
+                <td>期末成绩与预期差距较大</td><td>2024-12-20 09:15</td>
+                <td class="c"><span class="tag ok">已受理</span></td><td class="c link">查看回复</td>
+              </tr>
+              <tr>
+                <td class="link">AP20241218001</td><td>大学英语（三）</td><td class="c">87</td>
+                <td>听力部分疑似未计入总分</td><td>2024-12-18 16:40</td>
+                <td class="c"><span class="tag bad">已驳回</span></td><td class="c link">查看回复</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>关键元件</h3>
+        <ul>
+          <li><code>ddl_课程</code>（只列已出成绩课程）、<code>lbl_原成绩</code>（只读灰底）</li>
+          <li><code>ipt_申请理由</code> 多行文本 + <code>lbl_字数</code> 实时计数</li>
+          <li>3 个快捷理由标签，单击用 <code>[[This.text]]</code> 填入理由框</li>
+          <li><b>中继器</b> <code>tb_我的申请</code>：7 列，状态用枚举标签着色</li>
+          <li><code>dp_提交成功</code> 弹窗：「✓ 申请已提交，班主任将在 3 个工作日内受理」</li>
+        </ul>
+      </div>
+      <div>
+        <h3>关键规则</h3>
+        <ul>
+          <li>理由必填，去首尾空格后 10~200 字；不足则红字提示且<b>弹窗不出现</b></li>
+          <li>同课程已有「待受理」申请 → 阻止重复提交：「该课程已有待受理的查分申请」</li>
+          <li>提交成功后：弹窗 → 关闭 → 列表新增一行（状态=待受理）→ 表单清空</li>
+          <li>无历史申请时列表区显示空状态：「还没有查分申请」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- P4 -->
+<!-- ============================================================ -->
+<section class="wf" id="p4">
+  <h2>P4 · 添加学生成绩页面 <span class="tag">班主任</span></h2>
+  <p class="sub">入口：侧边菜单「添加成绩」｜ 出口：停留本页（保存后提示并清空）｜ FR-P4-01 ~ 09</p>
+
+  <div class="screen">
+    <div class="topbar">
+      <span class="brand">▤ 成绩管理系统</span>
+      <span class="spacer"></span>
+      <span class="who">欢迎，李老师</span>
+      <span class="link">退出登录</span>
+    </div>
+    <div class="body-flex">
+      <aside class="side">
+        <div class="nav">受理查分申请</div>
+        <div class="nav active">添加成绩</div>
+        <div class="nav">修改成绩</div>
+        <div class="nav">成绩统计</div>
+      </aside>
+      <main class="main">
+        <div class="pgt">添加学生成绩 <span class="crumb">首页 / 添加成绩</span></div>
+
+        <div class="card tight">
+          <div class="row">
+            <span class="lb" style="margin:0">班级 <span class="req">*</span></span>
+            <div class="inp w140 solid">软件工程2101班 ▾</div>
+            <span class="lb" style="margin:0">课程 <span class="req">*</span></span>
+            <div class="inp w150 solid">数据结构 ▾</div>
+            <span class="lb" style="margin:0">学期</span>
+            <div class="inp w110 solid">2024-2025-1 ▾</div>
+            <span class="spacer" style="flex:1"></span>
+            <span class="hint">已录入 2 / 共 6 人</span>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <span>共 6 名学生</span>
+          <span class="spacer" style="flex:1"></span>
+          <div class="btn">重置</div>
+          <div class="btn primary">保存全部成绩</div>
+        </div>
+
+        <div class="card tight" style="padding:0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th class="c" style="width:38px">序号</th>
+                <th style="width:76px">学号</th>
+                <th style="width:66px">姓名</th>
+                <th class="c" style="width:92px">平时成绩</th>
+                <th class="c" style="width:92px">期末成绩</th>
+                <th class="c" style="width:76px">总评成绩</th>
+                <th class="c" style="width:74px">状态</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="c">1</td><td>2021001</td><td>张三</td><td><span class="cellinp" style="text-align:center">85</span></td><td><span class="cellinp" style="text-align:center">92</span></td><td class="c okv" style="font-weight:700">89</td><td class="c"><span class="tag ok">已录入</span></td></tr>
+              <tr><td class="c">2</td><td>2021002</td><td>李四</td><td><span class="cellinp"></span></td><td><span class="cellinp"></span></td><td class="c muted">—</td><td class="c"><span class="tag">未录入</span></td></tr>
+              <tr><td class="c">3</td><td>2021003</td><td>王五</td><td><span class="cellinp" style="text-align:center">76</span></td><td><span class="cellinp" style="text-align:center">81</span></td><td class="c warnv" style="font-weight:700">79</td><td class="c"><span class="tag ok">已录入</span></td></tr>
+              <tr><td class="c">4</td><td>2021004</td><td>赵六</td><td><span class="cellinp"></span></td><td><span class="cellinp"></span></td><td class="c muted">—</td><td class="c"><span class="tag">未录入</span></td></tr>
+              <tr><td class="c">5</td><td>2021005</td><td>钱七</td><td><span class="cellinp"></span></td><td><span class="cellinp"></span></td><td class="c muted">—</td><td class="c"><span class="tag">未录入</span></td></tr>
+              <tr><td class="c">6</td><td>2021006</td><td>孙八</td><td><span class="cellinp" style="text-align:center;border-color:#c05b5b">120</span></td><td><span class="cellinp"></span></td><td class="c muted">—</td><td class="c"><span class="errline">成绩必须是 0~100</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tblnote">姓名、学号为只读，防止改错行；平时/期末失焦后自动计算总评。</div>
+      </main>
+    </div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>关键元件</h3>
+        <ul>
+          <li><code>ddl_班级</code>、<code>ddl_课程</code>、<code>ddl_学期</code> + 进度提示「已录入 x / 共 y 人」</li>
+          <li>工具栏：计数 + 重置 + <b>保存全部成绩</b>（主按钮）</li>
+          <li><b>中继器</b> <code>tb_录入列表</code>：7 列，第 4/5 列为可输入文本框</li>
+          <li><code>dp_未选择</code> 空状态；底部吸底保存条（长名单滚动时按钮常驻）</li>
+        </ul>
+      </div>
+      <div>
+        <h3>关键规则</h3>
+        <ul>
+          <li>未选班级或课程 → 显示「请先选择班级与课程」，保存按钮禁用</li>
+          <li>平时/期末失焦（<b>不是</b>文字改变时）计算总评 = round(平时×0.4 + 期末×0.6)</li>
+          <li>成绩限 0~100 整数，非法输入红边框 + 行内红字，不自动改值</li>
+          <li>已有成绩的行标记「已录入」，保存时提示「该生成绩已存在，请到修改页操作」</li>
+          <li>保存成功弹窗：「✓ 保存成功，已录入 2 条成绩」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- P5 -->
+<!-- ============================================================ -->
+<section class="wf" id="p5">
+  <h2>P5 · 修改学生成绩页面 <span class="tag">班主任</span></h2>
+  <p class="sub">入口：侧边菜单「修改成绩」｜ 出口：停留本页（保存后新增修改记录）｜ FR-P5-01 ~ 08</p>
+
+  <div class="screen">
+    <div class="topbar">
+      <span class="brand">▤ 成绩管理系统</span>
+      <span class="spacer"></span>
+      <span class="who">欢迎，李老师</span>
+      <span class="link">退出登录</span>
+    </div>
+    <div class="body-flex">
+      <aside class="side">
+        <div class="nav">受理查分申请</div>
+        <div class="nav">添加成绩</div>
+        <div class="nav active">修改成绩</div>
+        <div class="nav">成绩统计</div>
+      </aside>
+      <main class="main">
+        <div class="pgt">修改学生成绩 <span class="crumb">首页 / 修改成绩</span></div>
+
+        <div class="card tight">
+          <div class="row">
+            <span class="lb" style="margin:0">学号/姓名</span>
+            <div class="inp w110 solid">2021001</div>
+            <span class="lb" style="margin:0">班级</span>
+            <div class="inp w110 solid">软工2101班 ▾</div>
+            <span class="lb" style="margin:0">课程</span>
+            <div class="inp w130 solid">软件工程导论 ▾</div>
+            <div class="btn primary">查询</div>
+            <div class="btn">清空</div>
+          </div>
+        </div>
+
+        <div class="warnbar">⚠ 该成绩存在待受理的查分申请（AP20250115001），请先到「受理查分申请」完成受理后再修改。</div>
+
+        <div class="card">
+          <div class="row between" style="margin-bottom:4px">
+            <div style="font-weight:700;font-size:12px">2021001　张三　软件工程2101班　·　软件工程导论</div>
+            <span class="tag warn">查分中</span>
+          </div>
+
+          <table class="tbl" style="margin-bottom:6px">
+            <thead>
+              <tr>
+                <th style="width:110px">项目</th>
+                <th class="c" style="width:150px">原成绩（只读）</th>
+                <th class="c" style="width:150px">新成绩（可编辑）</th>
+                <th style="width:230px">说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>平时成绩</td><td class="c"><span class="inp ro" style="justify-content:center">52</span></td><td class="c"><span class="cellinp" style="text-align:center;height:20px">56</span></td><td class="hint">改动：52 → 56</td></tr>
+              <tr><td>期末成绩</td><td class="c"><span class="inp ro" style="justify-content:center">48</span></td><td class="c"><span class="cellinp" style="text-align:center;height:20px">48</span></td><td class="hint">未改动</td></tr>
+              <tr><td>总评成绩</td><td class="c bad" style="font-weight:700">50</td><td class="c okv" style="font-weight:700">51</td><td class="hint">自动计算，随新成绩实时更新</td></tr>
+            </tbody>
+          </table>
+
+          <div class="fld">
+            <span class="lb">修改原因 <span class="req">*</span>（5~100 字）</span>
+            <div class="inp area solid" style="height:32px">平时分漏计一次作业，据实更正。</div>
+          </div>
+          <div class="row">
+            <div class="btn primary">保存修改</div>
+            <div class="btn">取消修改</div>
+            <span class="hint">保存前会弹出二次确认，原成绩将保留在修改记录中</span>
+          </div>
+        </div>
+
+        <div style="font-weight:700;font-size:12px;margin:0 0 5px">修改记录</div>
+        <div class="card tight" style="padding:0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:100px">修改时间</th>
+                <th style="width:78px">操作人</th>
+                <th style="width:96px">课程</th>
+                <th style="width:150px">改动内容</th>
+                <th style="width:170px">修改原因</th>
+                <th class="c" style="width:60px">结果</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2025-01-16 10:22</td><td>T001 李老师</td><td>软件工程导论</td>
+                <td>平时 52→56；总评 50→51</td><td>平时分漏计一次作业，据实更正</td>
+                <td class="c"><span class="tag ok">已生效</span></td>
+              </tr>
+              <tr>
+                <td>2025-01-08 15:05</td><td>T001 李老师</td><td>数据库原理</td>
+                <td>期末 60→64；总评 62→62</td><td>登分时看错行</td>
+                <td class="c"><span class="tag ok">已生效</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>关键元件</h3>
+        <ul>
+          <li>查询区：<code>ipt_关键字</code> + <code>ddl_班级</code> + <code>ddl_课程</code> + 查询/清空</li>
+          <li><code>dp_锁定提示</code> 橙色警告条：成绩处于「查分中」时显示并整体禁用</li>
+          <li><code>dp_对照卡片</code>：原成绩只读 / 新成绩可编辑 / 总评自动计算</li>
+          <li><b>中继器</b> <code>tb_修改记录</code>：6 列，倒序（最新在上）</li>
+          <li><code>dp_二次确认</code> 弹窗；<code>dp_未查询</code> 空状态</li>
+        </ul>
+      </div>
+      <div>
+        <h3>关键规则</h3>
+        <ul>
+          <li>原成绩三项<b>只读</b>；新成绩与原成绩全等时不允许保存：「新成绩与原成绩相同，无需修改」</li>
+          <li>修改原因必填 5~100 字</li>
+          <li>二次确认弹窗需动态显示改动前后值：「平时 52→56，总评 50→51」</li>
+          <li>保存成功后同步：① 新增修改记录 ② 卡片的「原成绩」刷新为新值（否则连续修改会看到过期原值）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- P6 -->
+<!-- ============================================================ -->
+<section class="wf" id="p6">
+  <h2>P6 · 受理查分申请页面 <span class="tag">班主任主入口</span></h2>
+  <p class="sub">入口：P1 班主任登录成功／侧边菜单 ｜ 出口：停留本页（待受理 → 已受理）｜ FR-P6-01 ~ 10</p>
+
+  <div class="screen">
+    <div class="topbar">
+      <span class="brand">▤ 成绩管理系统</span>
+      <span class="spacer"></span>
+      <span class="who">欢迎，李老师</span>
+      <span class="link">退出登录</span>
+    </div>
+    <div class="body-flex">
+      <aside class="side">
+        <div class="nav active">受理查分申请</div>
+        <div class="nav">添加成绩</div>
+        <div class="nav">修改成绩</div>
+        <div class="nav">成绩统计</div>
+      </aside>
+      <main class="main">
+        <div class="pgt">受理查分申请 <span class="crumb">首页 / 受理查分申请</span></div>
+
+        <div class="row" style="gap:0;margin-bottom:9px">
+          <div style="padding:6px 16px;background:#6f8fb8;color:#fff;border-radius:4px 0 0 0;font-size:12px;font-weight:600">待受理 (3)</div>
+          <div style="padding:6px 16px;background:#fff;border:1px solid #dde0e4;border-left:none;border-radius:0 4px 0 0;color:#5c636c;font-size:12px">已受理 (5)</div>
+        </div>
+
+        <div class="card tight">
+          <div class="row">
+            <div class="inp w180">学号 / 姓名 / 申请编号</div>
+            <div class="inp w140">课程 ▾</div>
+            <div class="inp w110">近 30 天 ▾</div>
+            <div class="btn primary">查询</div>
+            <div class="btn">重置</div>
+          </div>
+        </div>
+
+        <div class="card tight" style="padding:0">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:100px">申请编号</th>
+                <th style="width:58px">学号</th>
+                <th style="width:44px">姓名</th>
+                <th style="width:86px">课程名称</th>
+                <th class="c" style="width:46px">原成绩</th>
+                <th style="width:106px">申请时间</th>
+                <th style="width:130px">申请理由</th>
+                <th class="c" style="width:90px">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="link">AP20250115001</td><td>2021001</td><td>张三</td><td>软件工程导论</td><td class="c bad">50</td>
+                <td>2025-01-15 14:30</td><td>平时分已按要求提交全部作业，请老师复核…</td>
+                <td class="c"><span class="btn primary" style="height:20px;padding:0 9px">受理</span> <span class="link">驳回</span></td>
+              </tr>
+              <tr>
+                <td class="link">AP20250115002</td><td>2021003</td><td>王五</td><td>计算机网络</td><td class="c warnv">70</td>
+                <td>2025-01-15 15:10</td><td>期末卷面估分 78，与公布成绩差距较大</td>
+                <td class="c"><span class="btn primary" style="height:20px;padding:0 9px">受理</span> <span class="link">驳回</span></td>
+              </tr>
+              <tr>
+                <td class="link">AP20250115003</td><td>2021005</td><td>钱七</td><td>数据库原理</td><td class="c warnv">62</td>
+                <td>2025-01-15 18:45</td><td>平时分一项显示为空，疑似漏录</td>
+                <td class="c"><span class="btn primary" style="height:20px;padding:0 9px">受理</span> <span class="link">驳回</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager">共 3 条　‹　1　›</div>
+        <div class="tblnote">受理后该条从「待受理」移除并出现在「已受理」，同时角标数字减一。</div>
+      </main>
+    </div>
+    <span class="screen-label">1440 × 900</span>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>关键元件</h3>
+        <ul>
+          <li><code>dp_申请列表</code> 动态面板：状态名 <code>待受理</code> / <code>已受理</code>，与标签文案一致</li>
+          <li>两个标签用「选中」交互样式实现互斥高亮，角标显示 <code>[[tb_待受理.itemCount]]</code></li>
+          <li><b>中继器</b> <code>tb_待受理</code> / <code>tb_已受理</code>：8 列，末列「受理 / 驳回」</li>
+          <li><code>dp_无待办</code> 空状态：「暂无待受理的查分申请」+ 「刷新」文字按钮</li>
+        </ul>
+      </div>
+      <div>
+        <h3>关键规则</h3>
+        <ul>
+          <li>默认停在「待受理」；待受理为空时显示空状态</li>
+          <li>点「受理」→ 打开弹窗并带入该条申请详情（用局部变量取被点击行数据，避免取错行）</li>
+          <li>受理完成：待受理<b>删除行</b> → 已受理<b>添加行</b>（状态=已受理，含处理意见）</li>
+          <li>这是 6 页里技术含量最高的一处，建议先跑通「删除行」再补「添加行」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 弹窗放样 -->
+<!-- ============================================================ -->
+<section class="wf" id="modal">
+  <h2>弹窗放样 <span class="tag">P6 受理弹窗 / P5 二次确认</span></h2>
+  <p class="sub">弹窗统一：宽度 560（二次确认 420），背景遮罩 40% 黑，圆角 8，淡入 200ms。校验失败时弹窗不关闭。</p>
+
+  <div class="modal-stage">
+    <div class="backdrop"></div>
+    <div class="modal">
+      <div class="mhead"><span>受理查分申请 · AP20250115001</span><span class="muted">✕</span></div>
+      <div class="mbody">
+        <div class="kv"><span class="k">学生</span><span class="v">2021001　张三　软件工程2101班</span></div>
+        <div class="kv"><span class="k">课程</span><span class="v">软件工程导论（CS105）　2024-2025-1</span></div>
+        <div class="kv"><span class="k">成绩明细</span><span class="v">平时 52　期末 48　总评 <b style="color:#b04a4a">50</b>（不及格）</span></div>
+        <div class="kv" style="margin-bottom:8px"><span class="k">申请理由</span><span class="v" style="flex:1">
+          <span class="inp area" style="height:34px;color:#3a4048">平时分已按要求提交全部作业，请老师复核登分情况。</span>
+        </span></div>
+        <div class="lb">处理结果 <span class="req">*</span></div>
+        <div class="radio-row">
+          <span>◉ 更正成绩</span>
+          <span>○ 维持原成绩</span>
+        </div>
+        <div class="fld">
+          <span class="lb">更正后成绩 <span class="req">*</span></span>
+          <div class="inp w90 solid">56</div>
+        </div>
+        <div class="fld">
+          <span class="lb">处理意见 <span class="req">*</span>（5~200 字）</span>
+          <div class="inp area solid">经复核，平时分漏计一次作业，已更正为 56 分，总评同步更新为 51 分。</div>
+          <div class="errline">请填写处理意见（5~200 字）</div>
+        </div>
+      </div>
+      <div class="mfoot">
+        <div class="btn">取消</div>
+        <div class="btn primary">确认受理</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div class="cols">
+      <div>
+        <h3>弹窗内校验（自上而下）</h3>
+        <ul>
+          <li>未选处理结果 → 「请选择处理结果」</li>
+          <li>选「更正成绩」但分数为空 / 超出 0~100 → 「请填写更正后的成绩（0~100）」</li>
+          <li>处理意见不足 5 字 → 「请填写处理意见（5~200 字）」</li>
+          <li>选择「维持原成绩」时，更正后成绩输入框动态隐藏并清空</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Axure 制作要点</h3>
+        <ul>
+          <li>遮罩层与弹窗同层级相邻，一条交互同时显示 / 隐藏；遮罩在弹窗<b>下方</b>、在其他内容<b>上方</b></li>
+          <li>弹窗在「大纲」中置于最顶层（Ctrl + ] 上移），避免被表格盖住</li>
+          <li>详情用「设置文本 + 局部变量」从被点击行填充，不要读行内文本</li>
+          <li>单选按钮与「更正后成绩」联动用「选中 / 取消选中」交互</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="legend" style="margin-bottom:0">
+  <b>说明：</b>本线框图用于确认布局与信息层级，颜色与字号为灰度示意；落地到 Axure 时的精确尺寸、元件命名与交互清单，请以
+  <code>docs/03-wireframe-spec.md</code> 的区域说明表和交互清单为准。
+</div>
+
+</div>
+</body>
+</html>

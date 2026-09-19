@@ -1,0 +1,21 @@
+# ---------- 依赖 ----------
+node_modules/
+
+# ---------- 构建缓存 ----------
+.vite/
+*.local
+
+# ---------- 编辑器 / 系统 ----------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ---------- 日志 ----------
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 注意：grade-front/dist/ 是「刻意提交」的，用于 GitHub Pages 在线演示，
+#       因此不要在本文件或 grade-front/.gitignore 中忽略它。
