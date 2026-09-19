@@ -1,9 +1,8 @@
-# grade-front · 成绩管理系统前端
+# grade-front · 高中成绩管理系统前端
 
-对应 Axure 原型的 6 个页面，用 **Vue 3 + Vite + Pinia + Vue Router** 实现，无 UI 框架依赖，样式按原型的设计规范手写。
+新高考「3+1+2」模式下的高中成绩管理，**Vue 3 + Vite + Pinia + Vue Router** 实现，无 UI 框架依赖。
 
-> 本工程是课程作业里的「鼓励项」：**先完成 Axure 原型，再做前端实现**。
-> 页面结构、字段、交互与 `docs/03-wireframe-spec.md` 一一对应。
+> ⚠️ **本工程已从「大学版」重构为「高中版」**，与仓库里 `docs/` 下的 Axure 设计文档、`axure-assets/` 的 CSV、`wireframes.html` **不再一致**（那些仍是大学版）。详见文末「与设计文档的差异」。
 
 ---
 
@@ -15,112 +14,142 @@ npm install       # 首次运行需要（依赖已随包提供，可跳过）
 npm run dev       # 开发模式，自动打开 http://localhost:5173
 ```
 
-其他命令：
-
 ```bash
 npm run build     # 构建到 dist/
-npm run preview   # 本地预览构建产物（http://localhost:4173）
+npm run preview   # 本地预览构建产物（默认 http://localhost:4173）
 ```
 
-> ⚠️ `dist/index.html` **不能**直接双击用 `file://` 打开——浏览器会以 CORS 策略拒绝加载 ES Module。
-> 请用 `npm run dev` 或 `npm run preview` 启动本地服务。
+> `dist/index.html` **不能**直接双击用 `file://` 打开——浏览器会以 CORS 策略拒绝加载 ES Module。
 
 ## 二、测试账号
 
 | 角色 | 账号 | 密码 |
 |---|---|---|
-| 学生 | `2021001` | `123456` |
-| 学生 | `2021003` | `123456` |
-| 学生 | `2021005` | `123456` |
-| 班主任 | `T001` | `123456` |
+| 学生（林晓，物化生） | `20230101` | `123456` |
+| 学生（苏雨桐，物化生） | `20230103` | `123456` |
+| 学生（顾清和，史政地） | `20230106` | `123456` |
+| 班主任（王老师） | `T001` | `123456` |
 
 登录页底部有「重置演示数据」，演示前点一下可恢复初始数据。
 
-## 三、页面与路由
+## 三、新高考「3+1+2」模型
 
-| 页面 | 路由 | 角色 | 关联需求 |
+| 类别 | 科目 | 满分 |
+|---|---|---|
+| 必考（3 门） | 语文、数学、外语 | 各 150 |
+| 首选（二选一） | 物理 / 历史 | 100 |
+| 再选（四选二） | 化学、生物、思想政治、地理 | 各 100 |
+| **合计** | 6 门 | **750** |
+
+演示班级 `高三(2)班` 有 6 名学生，含 3 种选科组合：物化生、物生地、史政地。
+
+**等级**按得分率划分：优秀 ≥85%、良好 ≥70%、及格 ≥60%、待提高 <60%。
+**排名**：班级排名按每次月考总分实排；年级排名为演示环境的估算值（按全年级总分正态分布折算，共 480 人）。
+
+## 四、页面与路由（8 个页面）
+
+| 页面 | 路由 | 角色 | 说明 |
 |---|---|---|---|
-| P1 学生登录 | `#/login` | 公共 | FR-P1-01 ~ 07 |
-| P2 成绩查询 | `#/student/scores` | 学生 | FR-P2-01 ~ 10 |
-| P3 申请查分 | `#/student/appeal` | 学生 | FR-P3-01 ~ 09 |
-| P6 受理查分申请 | `#/teacher/appeals` | 班主任 | FR-P6-01 ~ 10 |
-| P4 添加学生成绩 | `#/teacher/scores/add` | 班主任 | FR-P4-01 ~ 09 |
-| P5 修改学生成绩 | `#/teacher/scores/edit` | 班主任 | FR-P5-01 ~ 08 |
+| 登录 | `#/login` | 公共 | 学号/工号 + 密码 + 验证码 |
+| **月考成绩查询** | `#/student/exams` | 学生 | **科目 × 月考场次**成绩单矩阵 + 总分与排名表 |
+| **高考成绩预测** | `#/student/prediction` | 学生 | 逐科预测、总分预测与区间、趋势折线图、目标分对比 |
+| 申请查分 | `#/student/appeal` | 学生 | 对某次月考的某个科目发起复核申请 |
+| 受理查分申请 | `#/teacher/appeals` | 班主任 | 待受理 / 已受理、受理与驳回 |
+| 录入月考成绩 | `#/teacher/scores/add` | 班主任 | 按「班级 + 场次 + 科目」批量录入 |
+| 修改成绩 | `#/teacher/scores/edit` | 班主任 | 定位记录、改分、二次确认、留痕 |
+| 404 | 任意错误路径 | 公共 | — |
 
-登录成功后按角色自动分流；访问无权限的路由会被守卫重定向到本角色首页。
+**月考场次**：第一次 ~ 第七次月考。其中**第七次月考尚未录入成绩**，专门用来演示「录入月考成绩」页。
 
-## 四、演示路径（走完即演示完整业务闭环）
+## 五、高考成绩预测算法
+
+**加权移动平均 + 趋势修正**，四步：
+
+1. **换算得分率** —— 分数 ÷ 该科满分。语文满分 150、化学满分 100，只有统一成得分率才能比较和汇总。
+2. **加权移动平均** —— 第 i 次月考权重取 `i`（越近越重要），得到基准得分率。
+3. **趋势修正** —— 对最近 3 次得分率做最小二乘拟合取斜率，外推 2 次考试，再乘阻尼系数 **0.5**（只采信一半趋势，避免把一次波动放大成离谱预测）。
+4. **预测分与区间** —— 预测得分率 × 高考满分 = 预测分；用历史得分率的标准差给出 ±区间；按场次数量与波动幅度给出置信度（高/中/低）。
+
+参数集中在 `src/utils/score.js` 的 `PREDICT_CONFIG`，页面上会展示这三个数字，方便讲解与调参。
+
+> ⚠️ 预测结果仅供参考，不代表真实高考结果。
+
+## 六、演示路径
 
 ```
-1. 用 2021001 / 123456 登录（学生）
-2. P2 成绩查询：切换学期筛选、指出 50 分标红并带「不及格」标签
-3. 点「软件工程导论」行内的「申请查分」 → 跳 P3 并自动带入该课程
-4. P3 填理由（或用常用理由标签）→ 提交 → 列表新增一条「待受理」
-5. 退出登录 → 用 T001 / 123456 登录（班主任）
-6. P6 待受理列表出现刚才那条申请（角标为 3）
-7. 点「受理」→ 选择「更正成绩」→ 填 56 → 填写处理意见 → 确认
-   → 该条从待受理移到已受理
-8. P5 修改学生成绩：查 2021001 + 软件工程导论 → 对照卡片显示更正后的 56 分
-   → 修改记录里能看到「查分受理更正」这条留痕
-9. P4 添加学生成绩：批量录入，总评随平时/期末自动计算
+1. 用 20230101 / 123456 登录（学生）
+2. 月考成绩查询：看「语文/数学/外语/物理/化学/生物 × 6 次月考」成绩单矩阵，
+   切场次筛选、看「较上次」升降、看总分与班级/年级排名
+3. 高考成绩预测：看预测总分 661/750、区间 634~688、趋势折线图；
+   把目标分改成 680 看差距提示怎么变
+4. 申请查分：选「第六次月考 · 数学」，填理由提交 → 列表出现「待受理」
+5. 退出 → 用 T001 / 123456 登录（班主任）
+6. 受理查分申请：待受理列表能看到刚才那条，点「受理」→ 选「更正成绩」填分数 → 确认
+7. 修改成绩：查该学生该场次该科目，看到原分数/新分数对照与「修改记录」留痕
+8. 录入月考成绩：选「第七次月考」（待录入）→ 6 名学生 0/6 已录入 → 输入分数 → 保存
 ```
 
-## 五、目录结构
+## 七、目录结构
 
 ```
 grade-front/
 ├── index.html
 ├── vite.config.js
 └── src/
-    ├── main.js                    # 应用入口
-    ├── App.vue                    # 按路由 meta.public 切换布局
-    ├── router/index.js            # 路由表 + 登录守卫
+    ├── main.js
+    ├── App.vue
+    ├── router/index.js            # 8 条路由 + 登录守卫 + 角色分流
     ├── stores/
-    │   ├── user.js                # 登录用户、角色（对应原型全局变量 LoginUser / Role）
-    │   └── score.js               # 成绩 / 查分申请 / 修改记录（唯一数据源，localStorage 持久化）
+    │   ├── user.js                # 登录会话（学生 / 班主任）
+    │   └── score.js               # 成绩 / 查分申请 / 修改记录（唯一数据源）+ 排名与预测
     ├── api/
-    │   ├── mock.js                # 演示数据，与 docs/04-data-and-vue.md §2 一致
-    │   └── request.js             # 真实接口封装占位（接口清单见 §6）
-    ├── layouts/
-    │   ├── DefaultLayout.vue      # 对应母版：顶部导航 + 侧边菜单 + 内容区
-    │   └── BlankLayout.vue        # 登录页 / 404
+    │   ├── mock.js                # 科目、场次、学生、成绩生成器（确定性伪随机）
+    │   └── request.js             # 真实接口封装占位
+    ├── layouts/                   # DefaultLayout / BlankLayout
     ├── components/
-    │   ├── AppHeader.vue          # M_顶部导航
-    │   ├── AppSidebar.vue         # M_侧边菜单（按角色渲染）
-    │   ├── AppFooter.vue
-    │   ├── FilterBar.vue          # ② 筛选区
-    │   ├── DataTable.vue          # 通用表格（对应 Axure 中继器）
-    │   ├── Pagination.vue
-    │   ├── EmptyState.vue         # 空状态
-    │   ├── BaseModal.vue          # 弹窗（对应 dp_受理弹窗 / dp_二次确认）
-    │   ├── StatusTag.vue          # 状态标签（枚举字典见 §1.8）
-    │   ├── ScoreCell.vue          # 分数着色单元格
-    │   └── ToastHost.vue          # 轻提示
-    ├── composables/useToast.js
+    │   ├── AppHeader / AppSidebar / AppFooter
+    │   ├── DataTable.vue          # 通用表格（table-layout: fixed，严格按列宽渲染）
+    │   ├── TrendChart.vue         # 纯 SVG 趋势折线图（无第三方图表库）
+    │   └── StatusTag / BaseModal / EmptyState / Pagination / FilterBar / ToastHost
+    ├── views/
+    │   ├── LoginView.vue
+    │   ├── student/  ExamQueryView · PredictionView · AppealApplyView
+    │   └── teacher/  AppealHandleView · ExamScoreAddView · ScoreEditView
     ├── utils/
-    │   ├── score.js               # 总评 / 绩点 / 着色 / 等级 / 平均绩点
-    │   ├── validate.js            # 校验规则（§3 校验规则汇总表）
-    │   └── format.js              # 日期格式化
-    └── styles/
-        ├── variables.css          # 颜色 / 字号变量（与原型设计规范一致）
-        └── main.css
+    │   ├── score.js               # 得分率 / 等级 / 排名 / 线性回归 / 预测
+    │   ├── validate.js
+    │   └── format.js
+    └── styles/  variables.css · main.css
 ```
 
-## 六、实现要点
+## 八、实现要点
 
-| 需求 | 实现位置 | 说明 |
-|---|---|---|
-| FR-P1-06 角色分流 | `router/index.js`、`stores/user.js` | 登录守卫 + `homeRoute` getter |
-| FR-P2-06 分数着色 | `utils/score.js` + `ScoreCell.vue` | 颜色不是唯一信息载体，同时输出「不及格」文字标签 |
-| FR-P3-08 防重复提交 | `stores/score.js` `hasPendingAppeal` | 同课程已有待受理申请则阻止提交，P2 的按钮也会置灰 |
-| FR-P4-02 总评自动计算 | `ScoreAddView.vue` | 输入时即时计算，无需失焦提交 |
-| FR-P5-05 二次确认 | `ScoreEditView.vue` + `BaseModal` | 弹窗内动态展示「平时 52→56，总评 50→51」 |
-| FR-P5-06/07 留痕与锁定 | `stores/score.js`、`ScoreEditView.vue` | 写入 `changeLogs`；成绩处于「查分中」时整卡只读 |
-| FR-P6-05 条件必填 | `AppealHandleView.vue` | 选「更正成绩」时才要求填写更正后成绩 |
-| FR-P6-07 状态流转 | `stores/score.js` `handleAppeal` | 受理后移出待受理；更正成绩同步更新总评并写入修改记录 |
+| 需求 | 实现位置 |
+|---|---|
+| 多次月考查询 | `stores/score.js` `matrixOfStudent()`（科目 × 场次矩阵）+ `ExamQueryView.vue` |
+| 总分与排名 | `examRankings` getter：每次场次全班总分排名 + 年级排名估算 |
+| 等级判定 | `utils/score.js` `gradeLevel()`，按得分率四档 |
+| 高考预测 | `utils/score.js` `predictSubject()` / `sumPredictions()`，`PredictionView.vue` 展示 |
+| 趋势图 | `components/TrendChart.vue`，纯 SVG，含参考分数线与预测虚线 |
+| 选科差异 | `stores/score.js` `rosterOf()` 只列出选考该科的学生：录语文出 6 人、录生物只出选了生物的人 |
+| 录入留痕与锁定 | 修改写 `logs`；成绩处于「查分中」时修改页整卡只读 |
 
-## 七、数据说明
+## 九、数据说明
 
-- 所有数据存在浏览器 `localStorage`（键：`grade-system:user` / `grade-system:data`），刷新不丢，方便演示「学生提交 → 班主任受理」的跨角色闭环。
-- `api/mock.js` 里的成绩**不写死总评与绩点**，统一由 `utils/score.js` 按公式计算，避免示例数据与规则不一致。
-- 接真实后端时，替换 `api/request.js` 的实现，并把 `stores/score.js` 里的本地计算改为调用接口即可；接口清单见 `docs/04-data-and-vue.md` §6。
+- 数据存浏览器 `localStorage`（`grade-system:user` / `grade-system:data`），刷新不丢，支持「学生提交 → 班主任受理」跨角色演示。
+- 成绩**不手写**：`api/mock.js` 用固定 seed 的确定性伪随机生成（学生能力 + 科目偏置 + 个人趋势 + 噪声），所以每次刷新数据完全一致，同时有人稳步上升、有人在下滑。
+- `DATA_VERSION` 常量控制缓存失效；改过 mock 数据后把它 +1 即可。
+
+## 十、与设计文档的差异（重要）
+
+本次只重构了前端 App，仓库里其他部分**仍是大学版**：
+
+| 位置 | 现状 |
+|---|---|
+| `docs/01-requirements.md` | 大学成绩管理系统需求（学号、课程、平时 40% + 期末 60%、绩点学分） |
+| `docs/03-wireframe-spec.md` | 大学版 6 页线框说明 |
+| `docs/06-axure-coordinates.md` | 大学版元件坐标清单（167 个元件） |
+| `axure-assets/*.csv` | 大学版中继器数据 |
+| `wireframes.html` | 大学版灰度线框图 |
+
+也就是说：**Axure 原型部分和这份前端实现目前描述的不是同一个系统**。如果要保持整包一致，需要把上面这些也改成高中版（新高考 3+1+2、月考场次、高考预测）。

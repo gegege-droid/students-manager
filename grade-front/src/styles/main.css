@@ -341,6 +341,10 @@ a {
 .table {
   width: 100%;
   border-collapse: collapse;
+  /* 固定表格布局：严格按列宽渲染。
+     不设这一条时浏览器会按内容自动分配宽度，把精心算好的列宽挤掉，
+     导致「苏雨桐」这种三字姓名被折行。 */
+  table-layout: fixed;
   font-size: var(--font-size-body);
 }
 
@@ -352,6 +356,8 @@ a {
   padding: 12px;
   border-bottom: 1px solid var(--color-border);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .table td {
@@ -377,10 +383,12 @@ a {
 }
 
 .ellipsis {
-  max-width: 260px;
+  display: inline-block;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  vertical-align: bottom;
 }
 
 /* ============ 状态标签 ============ */

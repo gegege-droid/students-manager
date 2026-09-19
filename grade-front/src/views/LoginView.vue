@@ -98,9 +98,9 @@ function onResetDemo() {
     <div class="login-card">
       <div class="brand">
         <span class="logo">▤</span>
-        <span class="brand-name">成绩管理系统</span>
+        <span class="brand-name">高中成绩管理系统</span>
       </div>
-      <p class="subtitle">学生 / 班主任 登录</p>
+      <p class="subtitle">新高考 3+1+2 · 学生 / 班主任 登录</p>
       <div class="divider"></div>
 
       <div v-if="loginError" class="alert alert-danger login-error">⚠ {{ loginError }}</div>
@@ -171,7 +171,7 @@ function onResetDemo() {
     </div>
 
     <div class="page-foot">
-      <p>测试账号：学生 <b>2021001</b> / 123456　·　班主任 <b>T001</b> / 123456</p>
+      <p>测试账号：学生 <b>20230101</b> / 123456　·　班主任 <b>T001</b> / 123456</p>
       <button type="button" class="link-btn" @click="onResetDemo">重置演示数据</button>
     </div>
 

@@ -4,15 +4,16 @@ import { useUserStore } from '@/stores/user'
 
 const user = useUserStore()
 
-/** 菜单按角色渲染 —— 对应 Axure 母版 M_侧边菜单_学生 / M_侧边菜单_教师 */
+/** 菜单按角色渲染 */
 const MENUS = {
   STUDENT: [
-    { name: 'StudentScoreQuery', label: '成绩查询' },
+    { name: 'StudentExamQuery', label: '月考成绩查询' },
+    { name: 'StudentPrediction', label: '高考成绩预测' },
     { name: 'StudentAppealApply', label: '申请查分' }
   ],
   TEACHER: [
     { name: 'TeacherAppealHandle', label: '受理查分申请' },
-    { name: 'TeacherScoreAdd', label: '添加成绩' },
+    { name: 'TeacherScoreAdd', label: '录入月考成绩' },
     { name: 'TeacherScoreEdit', label: '修改成绩' }
   ]
 }
@@ -23,12 +24,7 @@ const menus = computed(() => MENUS[user.role] || [])
 <template>
   <aside class="app-sidebar">
     <nav>
-      <router-link
-        v-for="item in menus"
-        :key="item.name"
-        class="nav-item"
-        :to="{ name: item.name }"
-      >
+      <router-link v-for="item in menus" :key="item.name" class="nav-item" :to="{ name: item.name }">
         {{ item.label }}
       </router-link>
       <span class="nav-item is-disabled" title="本原型未实现，列为后续扩展">个人中心</span>

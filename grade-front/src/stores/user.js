@@ -15,10 +15,7 @@ function readCachedUser() {
 
 const cached = readCachedUser()
 
-/**
- * 用户会话 —— 对应 Axure 的全局变量 LoginUser / Role。
- * 用 Pinia + localStorage 代替原型里的全局变量，刷新页面不掉登录。
- */
+/** 用户会话（学生 / 班主任） */
 export const useUserStore = defineStore('user', {
   state: () => ({
     loginId: cached?.loginId || '',
@@ -33,20 +30,18 @@ export const useUserStore = defineStore('user', {
     isLoggedIn: (state) => Boolean(state.loginId),
     isStudent: (state) => state.role === 'STUDENT',
     isTeacher: (state) => state.role === 'TEACHER',
-    roleText: (state) => (state.role === 'STUDENT' ? '学生' : state.role === 'TEACHER' ? '班主任' : ''),
-    /** 登录后该角色应该落在哪个首页 —— 对应 FR-P1-06 角色分流 */
-    homeRoute: (state) => (state.role === 'TEACHER' ? 'TeacherAppealHandle' : 'StudentScoreQuery')
+    roleText: (state) =>
+      state.role === 'STUDENT' ? '学生' : state.role === 'TEACHER' ? '班主任' : '',
+    /** 登录后落在本角色首页 */
+    homeRoute: (state) =>
+      state.role === 'TEACHER' ? 'TeacherAppealHandle' : 'StudentExamQuery'
   },
 
   actions: {
-    /**
-     * 登录校验 —— 对应 FR-P1-01 / 03 / 06
-     * @returns {{ok: boolean, message?: string}}
-     */
     login(loginId, password) {
       const account = accounts.find((item) => item.loginId === String(loginId || '').trim())
       if (!account || account.password !== password) {
-        return { ok: false, message: '账号或密码错误，请重新输入' }
+        return { ok: false, message: '学号/工号或密码错误，请重新输入' }
       }
       this.loginId = account.loginId
       this.role = account.role

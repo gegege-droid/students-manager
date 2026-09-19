@@ -2,8 +2,9 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 
 /**
- * 路由表 —— 与 Axure 原型 6 个页面一一对应
- * 用 hash 路由：部署到静态服务器或任意子目录都不需要额外的 URL 重写配置。
+ * 路由表 —— 高中成绩管理系统（新高考 3+1+2）
+ * 学生端：月考成绩查询 / 高考成绩预测 / 申请查分
+ * 教师端：受理查分申请 / 录入月考成绩 / 修改成绩
  */
 const routes = [
   { path: '/', redirect: { name: 'Login' } },
@@ -14,10 +15,16 @@ const routes = [
     meta: { public: true, title: '登录' }
   },
   {
-    path: '/student/scores',
-    name: 'StudentScoreQuery',
-    component: () => import('@/views/student/ScoreQueryView.vue'),
-    meta: { role: 'STUDENT', title: '成绩查询' }
+    path: '/student/exams',
+    name: 'StudentExamQuery',
+    component: () => import('@/views/student/ExamQueryView.vue'),
+    meta: { role: 'STUDENT', title: '月考成绩查询' }
+  },
+  {
+    path: '/student/prediction',
+    name: 'StudentPrediction',
+    component: () => import('@/views/student/PredictionView.vue'),
+    meta: { role: 'STUDENT', title: '高考成绩预测' }
   },
   {
     path: '/student/appeal',
@@ -34,14 +41,14 @@ const routes = [
   {
     path: '/teacher/scores/add',
     name: 'TeacherScoreAdd',
-    component: () => import('@/views/teacher/ScoreAddView.vue'),
-    meta: { role: 'TEACHER', title: '添加学生成绩' }
+    component: () => import('@/views/teacher/ExamScoreAddView.vue'),
+    meta: { role: 'TEACHER', title: '录入月考成绩' }
   },
   {
     path: '/teacher/scores/edit',
     name: 'TeacherScoreEdit',
     component: () => import('@/views/teacher/ScoreEditView.vue'),
-    meta: { role: 'TEACHER', title: '修改学生成绩' }
+    meta: { role: 'TEACHER', title: '修改成绩' }
   },
   {
     path: '/:pathMatch(.*)*',
@@ -57,7 +64,7 @@ const router = createRouter({
   scrollBehavior: () => ({ top: 0 })
 })
 
-/** 登录守卫 —— 对应 FR-P1-06 角色分流与权限矩阵 */
+/** 登录守卫：未登录去登录页；角色不符回本角色首页 */
 router.beforeEach((to) => {
   const user = useUserStore()
 
@@ -80,7 +87,7 @@ router.beforeEach((to) => {
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title ? `${to.meta.title} · 成绩管理系统` : '成绩管理系统'
+  document.title = to.meta.title ? `${to.meta.title} · 高中成绩管理系统` : '高中成绩管理系统'
 })
 
 export default router
