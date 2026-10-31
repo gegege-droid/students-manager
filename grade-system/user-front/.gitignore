@@ -1,0 +1,9 @@
+node_modules
+*.local
+.DS_Store
+.vite
+npm-debug.log*
+yarn-error.log*
+
+# dist/ 刻意提交（GitHub Pages 在线演示用），因此这里不忽略它。
+# 本地重新构建后记得一并提交，否则线上演示页会与源码不一致。

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.portal.mapper.PortalScoreMapper">
+
+    <sql id="scoreViewSelect">
+        select s.score_id as scoreId,
+               s.student_id as studentId,
+               st.student_name as studentName,
+               st.class_id as classId,
+               cl.class_name as className,
+               co.course_id as courseId,
+               co.course_name as courseName,
+               co.credit as credit,
+               co.course_type as courseType,
+               s.term as term,
+               s.usual_score as usualScore,
+               s.final_score as finalScore,
+               s.total_score as totalScore,
+               s.gpa as gpa,
+               s.manual_total as manualTotal,
+               s.recorder_id as recorderId,
+               date_format(s.record_time, '%Y-%m-%d %H:%i:%s') as recordTime,
+               case
+                   when exists (
+                       select 1 from edu_appeal a
+                        where a.student_id = s.student_id
+                          and a.course_id = s.course_id
+                          and a.term = s.term
+                          and a.status = 'PENDING'
+                   ) then 'APPEALING'
+                   when exists (
+                       select 1 from edu_score_change_log l
+                        where l.student_id = s.student_id
+                          and l.course_id = s.course_id
+                   ) then 'MODIFIED'
+                   else 'NORMAL'
+               end as status
+          from edu_score s
+          join edu_student st on st.student_id = s.student_id
+          join edu_classroom cl on cl.class_id = st.class_id
+          join edu_course co on co.course_id = s.course_id
+    </sql>
+
+    <select id="selectScoreViews" parameterType="map" resultType="java.util.LinkedHashMap">
+        <include refid="scoreViewSelect"/>
+        <where>
+            <if test="studentId != null and studentId != ''">
+                and s.student_id = #{studentId}
+            </if>
+            <if test="classIds != null and classIds.size() > 0">
+                and st.class_id in
+                <foreach collection="classIds" item="cid" open="(" separator="," close=")">
+                    #{cid}
+                </foreach>
+            </if>
+            <if test="classId != null and classId != ''">
+                and st.class_id = #{classId}
+            </if>
+            <if test="courseId != null and courseId != ''">
+                and s.course_id = #{courseId}
+            </if>
+            <if test="term != null and term != ''">
+                and s.term = #{term}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and (co.course_name like concat('%', #{keyword}, '%')
+                     or co.course_id like concat('%', #{keyword}, '%')
+                     or st.student_name like concat('%', #{keyword}, '%')
+                     or st.student_id like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by s.student_id, s.course_id
+    </select>
+
+    <select id="selectScoreViewById" resultType="java.util.LinkedHashMap">
+        <include refid="scoreViewSelect"/>
+        where s.score_id = #{scoreId}
+    </select>
+
+    <sql id="rawScoreSelect">
+        select score_id as scoreId,
+               student_id as studentId,
+               course_id as courseId,
+               term as term,
+               usual_score as usualScore,
+               final_score as finalScore,
+               total_score as totalScore,
+               gpa as gpa,
+               manual_total as manualTotal,
+               recorder_id as recorderId
+          from edu_score
+    </sql>
+
+    <select id="selectScoreByKey" resultType="java.util.LinkedHashMap">
+        <include refid="rawScoreSelect"/>
+         where student_id = #{studentId}
+           and course_id = #{courseId}
+        <if test="term != null and term != ''">
+           and term = #{term}
+        </if>
+         order by term desc
+         limit 1
+    </select>
+
+    <select id="selectScoreByKeyForUpdate" resultType="java.util.LinkedHashMap">
+        <include refid="rawScoreSelect"/>
+         where student_id = #{studentId}
+           and course_id = #{courseId}
+           and term = #{term}
+         for update
+    </select>
+
+    <select id="selectScoreByStudentCourse" resultType="java.util.LinkedHashMap">
+        <include refid="rawScoreSelect"/>
+         where student_id = #{studentId}
+           and course_id = #{courseId}
+         order by term desc
+         limit 1
+    </select>
+
+    <select id="selectStudentClass" resultType="java.lang.String">
+        select class_id
+          from edu_student
+         where student_id = #{studentId}
+           and status = '0'
+         limit 1
+    </select>
+
+    <select id="selectRoster" parameterType="map" resultType="java.util.LinkedHashMap">
+        select st.student_id as studentId,
+               st.student_name as name,
+               st.class_id as classId,
+               cl.class_name as className,
+               s.score_id as scoreId,
+               s.usual_score as usualScore,
+               s.final_score as finalScore,
+               s.total_score as totalScore,
+               case when s.score_id is null then 0 else 1 end as recorded
+          from edu_student st
+          join edu_classroom cl on cl.class_id = st.class_id
+          left join edu_score s
+                 on s.student_id = st.student_id
+                and s.course_id = #{courseId}
+                and s.term = #{term}
+         where st.class_id = #{classId}
+           and st.status = '0'
+         order by st.student_id
+    </select>
+
+    <select id="selectLogs" resultType="java.util.LinkedHashMap">
+        select l.log_id as logId,
+               l.score_id as scoreId,
+               l.student_id as studentId,
+               st.student_name as studentName,
+               l.course_id as courseId,
+               co.course_name as courseName,
+               l.term as term,
+               l.old_usual as oldUsual,
+               l.old_final as oldFinal,
+               l.old_total as oldTotal,
+               l.new_usual as newUsual,
+               l.new_final as newFinal,
+               l.new_total as newTotal,
+               l.change_reason as changeReason,
+               l.operator_id as operatorId,
+               t.teacher_name as operatorName,
+               date_format(l.operate_time, '%Y-%m-%d %H:%i:%s') as operateTime,
+               l.source as source
+          from edu_score_change_log l
+          left join edu_student st on st.student_id = l.student_id
+          left join edu_course co on co.course_id = l.course_id
+          left join edu_teacher t on t.teacher_id = l.operator_id
+         where l.score_id = #{scoreId}
+         order by l.operate_time desc, l.log_id desc
+    </select>
+
+    <insert id="insertScore" parameterType="map">
+        insert into edu_score
+            (score_id, student_id, course_id, term, usual_score, final_score,
+             total_score, gpa, manual_total, recorder_id, record_time, create_by, create_time)
+        values
+            (#{scoreId}, #{studentId}, #{courseId}, #{term},
+             #{usualScore,jdbcType=INTEGER}, #{finalScore,jdbcType=INTEGER},
+             #{totalScore,jdbcType=INTEGER}, #{gpa,jdbcType=DECIMAL},
+             '0', #{recorderId}, now(), #{recorderId}, now())
+    </insert>
+
+    <update id="updateScore" parameterType="map">
+        update edu_score
+           set usual_score = #{usualScore,jdbcType=INTEGER},
+               final_score = #{finalScore,jdbcType=INTEGER},
+               total_score = #{totalScore,jdbcType=INTEGER},
+               gpa = #{gpa,jdbcType=DECIMAL},
+               manual_total = '0',
+               update_by = #{operatorId},
+               update_time = now()
+         where score_id = #{scoreId}
+    </update>
+
+    <update id="updateTotal" parameterType="map">
+        update edu_score
+           set total_score = #{totalScore,jdbcType=INTEGER},
+               gpa = #{gpa,jdbcType=DECIMAL},
+               manual_total = '1',
+               update_by = #{operatorId},
+               update_time = now()
+         where score_id = #{scoreId}
+    </update>
+
+    <insert id="insertLog" parameterType="map">
+        insert into edu_score_change_log
+            (log_id, score_id, student_id, course_id, term,
+             old_usual, old_final, old_total, new_usual, new_final, new_total,
+             change_reason, operator_id, operate_time, source, create_by, create_time)
+        values
+            (#{logId}, #{scoreId}, #{studentId}, #{courseId}, #{term},
+             #{oldUsual,jdbcType=INTEGER}, #{oldFinal,jdbcType=INTEGER}, #{oldTotal,jdbcType=INTEGER},
+             #{newUsual,jdbcType=INTEGER}, #{newFinal,jdbcType=INTEGER}, #{newTotal,jdbcType=INTEGER},
+             #{changeReason}, #{operatorId}, now(), #{source}, #{operatorId}, now())
+    </insert>
+
+    <select id="countPendingAppeal" parameterType="map" resultType="int">
+        select count(1)
+          from edu_appeal
+         where student_id = #{studentId}
+           and course_id = #{courseId}
+           and term = #{term}
+           and status = 'PENDING'
+    </select>
+
+</mapper>

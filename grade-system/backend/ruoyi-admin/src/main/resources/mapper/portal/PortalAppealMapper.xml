@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.portal.mapper.PortalAppealMapper">
+
+    <sql id="appealViewSelect">
+        select a.appeal_id as appealId,
+               a.student_id as studentId,
+               st.student_name as studentName,
+               st.class_id as classId,
+               cl.class_name as className,
+               co.course_id as courseId,
+               co.course_name as courseName,
+               co.credit as credit,
+               a.term as term,
+               a.original_score as originalScore,
+               a.reason as reason,
+               date_format(a.apply_time, '%Y-%m-%d %H:%i:%s') as applyTime,
+               a.status as status,
+               a.result as result,
+               a.corrected_score as correctedScore,
+               a.opinion as opinion,
+               a.handler_id as handlerId,
+               t.teacher_name as handlerName,
+               date_format(a.handle_time, '%Y-%m-%d %H:%i:%s') as handleTime,
+               s.usual_score as usualScore,
+               s.final_score as finalScore
+          from edu_appeal a
+          join edu_student st on st.student_id = a.student_id
+          join edu_classroom cl on cl.class_id = st.class_id
+          join edu_course co on co.course_id = a.course_id
+          left join edu_teacher t on t.teacher_id = a.handler_id
+          left join edu_score s
+                 on s.student_id = a.student_id
+                and s.course_id = a.course_id
+                and s.term = a.term
+    </sql>
+
+    <select id="selectAppealViews" parameterType="map" resultType="java.util.LinkedHashMap">
+        <include refid="appealViewSelect"/>
+        <where>
+            <if test="studentId != null and studentId != ''">
+                and a.student_id = #{studentId}
+            </if>
+            <if test="classIds != null and classIds.size() > 0">
+                and st.class_id in
+                <foreach collection="classIds" item="cid" open="(" separator="," close=")">
+                    #{cid}
+                </foreach>
+            </if>
+            <if test="courseId != null and courseId != ''">
+                and a.course_id = #{courseId}
+            </if>
+            <if test="status != null and status != ''">
+                <choose>
+                    <when test="status == 'HANDLED'">
+                        and a.status != 'PENDING'
+                    </when>
+                    <otherwise>
+                        and a.status = #{status}
+                    </otherwise>
+                </choose>
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and (st.student_name like concat('%', #{keyword}, '%')
+                     or st.student_id like concat('%', #{keyword}, '%')
+                     or co.course_name like concat('%', #{keyword}, '%')
+                     or a.appeal_id like concat('%', #{keyword}, '%'))
+            </if>
+        </where>
+        order by a.apply_time desc, a.appeal_id desc
+    </select>
+
+    <select id="selectAppealViewById" resultType="java.util.LinkedHashMap">
+        <include refid="appealViewSelect"/>
+        where a.appeal_id = #{appealId}
+    </select>
+
+    <select id="selectAppealForUpdate" resultType="java.util.LinkedHashMap">
+        select a.appeal_id as appealId,
+               a.student_id as studentId,
+               st.class_id as classId,
+               a.course_id as courseId,
+               a.term as term,
+               a.original_score as originalScore,
+               a.status as status
+          from edu_appeal a
+          join edu_student st on st.student_id = a.student_id
+         where a.appeal_id = #{appealId}
+         for update
+    </select>
+
+    <select id="selectMaxAppealId" resultType="java.lang.String">
+        select max(appeal_id)
+          from edu_appeal
+         where appeal_id like concat(#{prefix}, '%')
+    </select>
+
+    <select id="countPending" resultType="int">
+        select count(1)
+          from edu_appeal
+         where student_id = #{studentId}
+           and course_id = #{courseId}
+           and term = #{term}
+           and status = 'PENDING'
+    </select>
+
+    <insert id="insertAppeal" parameterType="map">
+        insert into edu_appeal
+            (appeal_id, student_id, course_id, term, original_score, reason,
+             apply_time, status, result, corrected_score, opinion, handler_id, handle_time,
+             create_by, create_time)
+        values
+            (#{appealId}, #{studentId}, #{courseId}, #{term},
+             #{originalScore,jdbcType=INTEGER}, #{reason}, now(),
+             'PENDING', '', null, '', '', null, #{studentId}, now())
+    </insert>
+
+    <update id="updateHandle" parameterType="map">
+        update edu_appeal
+           set status = 'ACCEPTED',
+               result = #{result},
+               corrected_score = #{correctedScore,jdbcType=INTEGER},
+               opinion = #{opinion},
+               handler_id = #{handlerId},
+               handle_time = now(),
+               update_by = #{handlerId},
+               update_time = now()
+         where appeal_id = #{appealId}
+    </update>
+
+    <update id="updateReject" parameterType="map">
+        update edu_appeal
+           set status = 'REJECTED',
+               result = '',
+               opinion = #{opinion},
+               handler_id = #{handlerId},
+               handle_time = now(),
+               update_by = #{handlerId},
+               update_time = now()
+         where appeal_id = #{appealId}
+    </update>
+
+</mapper>
