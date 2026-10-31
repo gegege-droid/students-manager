@@ -17,6 +17,22 @@
 
 ---
 
+## 📦 软件工程实验二 / 实验三 交付物（`deliverable/`）
+
+| 文件 / 目录 | 内容 |
+|---|---|
+| `deliverable/实验二_概要设计说明书.docx` | 41 页，10 章：架构模块框图、E-R 图、24 个接口、模块功能说明、与 RuoYi-Vue 的分层映射、代码生成器实操记录 |
+| `deliverable/实验三_详细设计说明书.docx` | 正文 58 页，13 章：6 个模块的代码文件结构、函数调用关系、流程图/状态机、函数说明表、14 段伪代码、测试用例 |
+| `deliverable/sql/` | `grade_manage.sql`（10 张表建表脚本）、`demo_data.sql`（216 条成绩 + 36 条核算） |
+| `deliverable/backend/` | 按文档接口契约实现的 Spring Boot 3 后端（21 个接口 + Swagger，连 MySQL） |
+| `deliverable/ruoyi/` | ruoyi-generator 生成的「月考成绩」管理端代码（Controller/Service/Mapper/XML/Vue/菜单 SQL）+ 若依配置改动 |
+| `deliverable/scripts/` | 一键启动脚本（若依 + Redis + 前端、业务前端、参考后端） |
+| `deliverable/RUNBOOK-若依环境.md` | 若依 3.9.2 + Redis 8.10.3 的部署步骤、配置改动、生成器实操与排错 |
+
+两份说明书均按 A4、正文宋体小四、1.5 倍行距排版，目录页码为实际渲染页码。
+
+---
+
 ## 一、快速上手
 
 ```bash
