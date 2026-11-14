@@ -1,3 +1,6 @@
+# 本地私密配置（DeepSeek API Key 等），不要提交
+backend/config/
+
 # 依赖与构建产物
 **/node_modules/
 **/target/
