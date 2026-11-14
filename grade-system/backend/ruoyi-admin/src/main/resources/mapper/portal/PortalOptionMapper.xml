@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.portal.mapper.PortalOptionMapper">
+
+    <select id="selectTerms" resultType="java.lang.String">
+        select distinct term
+          from edu_course
+         where status = '0'
+           and term is not null
+         order by term desc
+    </select>
+
+    <select id="selectClasses" resultType="java.util.LinkedHashMap">
+        select class_id as classId, class_name as className
+          from edu_classroom
+         where status = '0'
+        <if test="classIds != null and classIds.size() > 0">
+            and class_id in
+            <foreach collection="classIds" item="cid" open="(" separator="," close=")">
+                #{cid}
+            </foreach>
+        </if>
+        <if test="classIds == null or classIds.size() == 0">
+            and 1 = 0
+        </if>
+         order by class_id
+    </select>
+
+    <select id="selectCourses" resultType="java.util.LinkedHashMap">
+        select course_id as courseId,
+               course_name as courseName,
+               credit as credit,
+               term as term,
+               teacher_id as teacherId,
+               course_type as courseType
+          from edu_course
+         where status = '0'
+         order by course_id
+    </select>
+
+</mapper>

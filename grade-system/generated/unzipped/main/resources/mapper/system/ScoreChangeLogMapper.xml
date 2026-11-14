@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ScoreChangeLogMapper">
+    
+    <resultMap type="ScoreChangeLog" id="ScoreChangeLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="scoreId"    column="score_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="term"    column="term"    />
+        <result property="oldUsual"    column="old_usual"    />
+        <result property="oldFinal"    column="old_final"    />
+        <result property="oldTotal"    column="old_total"    />
+        <result property="newUsual"    column="new_usual"    />
+        <result property="newFinal"    column="new_final"    />
+        <result property="newTotal"    column="new_total"    />
+        <result property="changeReason"    column="change_reason"    />
+        <result property="operatorId"    column="operator_id"    />
+        <result property="operateTime"    column="operate_time"    />
+        <result property="source"    column="source"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectScoreChangeLogVo">
+        select log_id, score_id, student_id, course_id, term, old_usual, old_final, old_total, new_usual, new_final, new_total, change_reason, operator_id, operate_time, source, create_by, create_time, update_by, update_time, remark from edu_score_change_log
+    </sql>
+
+    <select id="selectScoreChangeLogList" parameterType="ScoreChangeLog" resultMap="ScoreChangeLogResult">
+        <include refid="selectScoreChangeLogVo"/>
+        <where>  
+            <if test="studentId != null  and studentId != ''"> and student_id = #{studentId}</if>
+            <if test="courseId != null  and courseId != ''"> and course_id = #{courseId}</if>
+            <if test="term != null  and term != ''"> and term = #{term}</if>
+        </where>
+    </select>
+    
+    <select id="selectScoreChangeLogByLogId" parameterType="String" resultMap="ScoreChangeLogResult">
+        <include refid="selectScoreChangeLogVo"/>
+        where log_id = #{logId}
+    </select>
+
+    <insert id="insertScoreChangeLog" parameterType="ScoreChangeLog">
+        insert into edu_score_change_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="logId != null and logId != ''">log_id,</if>
+            <if test="scoreId != null and scoreId != ''">score_id,</if>
+            <if test="studentId != null and studentId != ''">student_id,</if>
+            <if test="courseId != null and courseId != ''">course_id,</if>
+            <if test="term != null and term != ''">term,</if>
+            <if test="oldUsual != null">old_usual,</if>
+            <if test="oldFinal != null">old_final,</if>
+            <if test="oldTotal != null">old_total,</if>
+            <if test="newUsual != null">new_usual,</if>
+            <if test="newFinal != null">new_final,</if>
+            <if test="newTotal != null">new_total,</if>
+            <if test="changeReason != null and changeReason != ''">change_reason,</if>
+            <if test="operatorId != null and operatorId != ''">operator_id,</if>
+            <if test="operateTime != null">operate_time,</if>
+            <if test="source != null and source != ''">source,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="logId != null and logId != ''">#{logId},</if>
+            <if test="scoreId != null and scoreId != ''">#{scoreId},</if>
+            <if test="studentId != null and studentId != ''">#{studentId},</if>
+            <if test="courseId != null and courseId != ''">#{courseId},</if>
+            <if test="term != null and term != ''">#{term},</if>
+            <if test="oldUsual != null">#{oldUsual},</if>
+            <if test="oldFinal != null">#{oldFinal},</if>
+            <if test="oldTotal != null">#{oldTotal},</if>
+            <if test="newUsual != null">#{newUsual},</if>
+            <if test="newFinal != null">#{newFinal},</if>
+            <if test="newTotal != null">#{newTotal},</if>
+            <if test="changeReason != null and changeReason != ''">#{changeReason},</if>
+            <if test="operatorId != null and operatorId != ''">#{operatorId},</if>
+            <if test="operateTime != null">#{operateTime},</if>
+            <if test="source != null and source != ''">#{source},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateScoreChangeLog" parameterType="ScoreChangeLog">
+        update edu_score_change_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scoreId != null and scoreId != ''">score_id = #{scoreId},</if>
+            <if test="studentId != null and studentId != ''">student_id = #{studentId},</if>
+            <if test="courseId != null and courseId != ''">course_id = #{courseId},</if>
+            <if test="term != null and term != ''">term = #{term},</if>
+            <if test="oldUsual != null">old_usual = #{oldUsual},</if>
+            <if test="oldFinal != null">old_final = #{oldFinal},</if>
+            <if test="oldTotal != null">old_total = #{oldTotal},</if>
+            <if test="newUsual != null">new_usual = #{newUsual},</if>
+            <if test="newFinal != null">new_final = #{newFinal},</if>
+            <if test="newTotal != null">new_total = #{newTotal},</if>
+            <if test="changeReason != null and changeReason != ''">change_reason = #{changeReason},</if>
+            <if test="operatorId != null and operatorId != ''">operator_id = #{operatorId},</if>
+            <if test="operateTime != null">operate_time = #{operateTime},</if>
+            <if test="source != null and source != ''">source = #{source},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteScoreChangeLogByLogId" parameterType="String">
+        delete from edu_score_change_log where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteScoreChangeLogByLogIds" parameterType="String">
+        delete from edu_score_change_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper>

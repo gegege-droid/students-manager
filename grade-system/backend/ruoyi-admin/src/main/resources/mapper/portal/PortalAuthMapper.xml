@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.portal.mapper.PortalAuthMapper">
+
+    <select id="selectStudent" resultType="java.util.LinkedHashMap">
+        select s.student_id as loginId,
+               s.student_name as name,
+               s.class_id as classId,
+               c.class_name as className
+          from edu_student s
+          left join edu_classroom c on c.class_id = s.class_id
+         where s.student_id = #{loginId}
+           and s.status = '0'
+         limit 1
+    </select>
+
+    <select id="selectTeacher" resultType="java.util.LinkedHashMap">
+        select t.teacher_id as loginId,
+               t.teacher_name as name
+          from edu_teacher t
+         where t.teacher_id = #{loginId}
+           and t.status = '0'
+         limit 1
+    </select>
+
+    <select id="selectManagedClassIds" resultType="java.lang.String">
+        select class_id
+          from edu_classroom
+         where head_teacher_id = #{teacherId}
+           and status = '0'
+         order by class_id
+    </select>
+
+</mapper>
