@@ -1,7 +1,6 @@
 @echo off
 setlocal
 cd /d "%~dp0backend"
-set "JAVA_HOME=C:\Users\lenovo\.jdks\corretto-17.0.19"
 
 if not exist "ruoyi-admin\target\ruoyi-admin.jar" (
   echo [ERROR] ruoyi-admin.jar not found.
@@ -11,5 +10,7 @@ if not exist "ruoyi-admin\target\ruoyi-admin.jar" (
 )
 
 echo Starting RuoYi backend on http://localhost:8080 ...
-"%JAVA_HOME%\bin\java.exe" -jar "ruoyi-admin\target\ruoyi-admin.jar"
+set "JAVA_EXE=java"
+if defined JAVA_HOME set "JAVA_EXE=%JAVA_HOME%\bin\java.exe"
+"%JAVA_EXE%" -jar "ruoyi-admin\target\ruoyi-admin.jar"
 pause

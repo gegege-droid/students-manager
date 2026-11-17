@@ -5,33 +5,13 @@
 
 ---
 
-## 1. 交付包整体结构
+## 1. 实验一原型资料
 
-```
-ruanjian/
-├── README.md                     交付包总览：文件清单、快速上手、假设与待确认项
-├── wireframes.html               可视化线框图（公共框架 + 6 页 + 弹窗放样），可打印成 PDF
-│
-├── docs/                         ← 设计文档（交付/说明书素材）
-│   ├── 01-requirements.md        需求分析：作业对照表、权限矩阵、FR 需求表、状态机、假设
-│   ├── 02-axure-guide.md         Axure 制作指导：母版、交互清单、变量表达式、发布导出
-│   ├── 03-wireframe-spec.md      六页线框说明：区域、元件、字段校验、交互、状态
-│   ├── 04-data-and-vue.md        数据字典、Mock 数据、Vue 落地建议、需求追溯矩阵
-│   └── 05-architecture.md        本文：文件架构与系统设计
-│
-└── grade-front/                  ← 可运行的前端工程（Vue 3 + Vite）
-    ├── README.md                 运行方式、测试账号、路由表、演示路径
-    ├── index.html                应用宿主页（唯一 HTML 入口）
-    ├── vite.config.js            构建配置：@ 别名、base、dev server
-    ├── package.json              依赖与脚本（dev / build / preview）
-    ├── .gitignore
-    ├── dist/                     构建产物（自动生成，可提交用于演示）
-    └── src/                      源码（见 §2）
-```
+- [可视化线框图](../wireframes.html)
+- [需求说明](01-requirements.md)、[Axure 制作指南](02-axure-guide.md)与[六页线框说明](03-wireframe-spec.md)
+- [数据字典和前端实现建议](04-data-and-vue.md)与[Axure 中继器数据](../axure-assets/)
 
-**两份说明文档的边界**：`docs/` 面向**设计与交付**（原型怎么搭、需求是什么），`grade-front/README.md` 面向**运行与演示**（怎么跑起来、怎么走一遍）。
-
----
+下文记录实验一原型验证阶段的前端分层与数据流。当前的前端工程、后端接口及启动方式见[系统部署与使用说明](../grade-system/README.md)。
 
 ## 2. 前端分层架构
 

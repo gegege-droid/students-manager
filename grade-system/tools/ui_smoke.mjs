@@ -3,7 +3,7 @@
  *  - 调后端登录接口拿 token
  *  - 写入 localStorage 并整页导航（模拟刷新后恢复会话）
  *  - 检查学生成绩页、教师受理页是否渲染出数据
- *  - 保存截图到 report/assets
+ *  - 保存截图到 test-artifacts
  *
  * 前置：Edge 以 --remote-debugging-port=9222 启动；user-front 运行在 5173；后端 8080。
  */
@@ -12,7 +12,7 @@ import path from 'node:path'
 
 const CDP = 'http://127.0.0.1:9222'
 const APP = 'http://localhost:5173'
-const OUT = path.resolve('report/assets')
+const OUT = path.resolve('test-artifacts')
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 async function targetWs() {

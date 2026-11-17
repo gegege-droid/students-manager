@@ -2,7 +2,7 @@
 
 这 6 个 CSV 是给 `docs/06-axure-coordinates.md` 里那 6 个**中继器**（Repeater）用的数据集，直接导入就不用一个个手敲了。
 
-数据与 `docs/04-data-and-vue.md` §2、以及前端工程 `grade-front/src/api/mock.js` **完全一致** —— 原型和实现用的是同一套演示数据，答辩时不会出现「原型里是 89、系统里是 87」这种对不上的情况。
+实验一的示例数据见[原型数据字典](../docs/04-data-and-vue.md)。当前系统的演示数据由[数据库种子脚本](../grade-system/db/02_seed_grade.sql)加载。
 
 ---
 

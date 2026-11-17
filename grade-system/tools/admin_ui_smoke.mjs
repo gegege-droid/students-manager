@@ -3,7 +3,7 @@
  *  - 通过 /dev-api/login 拿 admin token，写入 Admin-Token Cookie
  *  - 整页刷新后进入 /index，检查「成绩管理」菜单
  *  - 进入 /grade/score、/grade/appeal，检查生成页面是否渲染数据
- *  - 保存截图到 report/assets
+ *  - 保存截图到 test-artifacts
  *
  * 前置：Edge 以 --remote-debugging-port=9222 启动；管理端 8081；后端 8080。
  */
@@ -12,7 +12,7 @@ import path from 'node:path'
 
 const CDP = 'http://127.0.0.1:9222'
 const APP = 'http://localhost:8081'
-const OUT = path.resolve('report/assets')
+const OUT = path.resolve('test-artifacts')
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 async function targetWs() {

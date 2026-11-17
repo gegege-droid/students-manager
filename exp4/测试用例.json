@@ -1,0 +1,218 @@
+[
+  {
+    "id": "TC-FUNC-01",
+    "type": "有效性",
+    "title": "管理员正常登录",
+    "steps": "输入 admin/admin123，点击登录",
+    "input": "admin / admin123",
+    "expected": "返回 token，code=200"
+  },
+  {
+    "id": "TC-FUNC-02",
+    "type": "有效性",
+    "title": "查询学生列表",
+    "steps": "不带条件查询学生列表",
+    "input": "pageNum=1, pageSize=10",
+    "expected": "code=200，total=6，返回 6 条记录"
+  },
+  {
+    "id": "TC-FUNC-03",
+    "type": "有效性",
+    "title": "查询学生详情",
+    "steps": "按学号 2021001 查询",
+    "input": "studentId=2021001",
+    "expected": "code=200，返回张三的信息"
+  },
+  {
+    "id": "TC-FUNC-04",
+    "type": "有效性",
+    "title": "新增学生",
+    "steps": "填写完整学生信息并保存",
+    "input": "studentId=2021777, studentName=用例测试生",
+    "expected": "code=200，新增成功可查询"
+  },
+  {
+    "id": "TC-FUNC-05",
+    "type": "有效性",
+    "title": "修改学生",
+    "steps": "修改姓名与手机号并保存",
+    "input": "studentName=用例测试生改",
+    "expected": "code=200，修改后查询为新值"
+  },
+  {
+    "id": "TC-FUNC-06",
+    "type": "有效性",
+    "title": "删除学生",
+    "steps": "删除学号 2021777",
+    "input": "studentIds=2021777",
+    "expected": "code=200，删除后查询为空"
+  },
+  {
+    "id": "TC-FUNC-07",
+    "type": "有效性",
+    "title": "查询测试用户列表",
+    "steps": "调用 /test/user/list",
+    "input": "无参数",
+    "expected": "code=200，返回 Hash 表中 2 条用户"
+  },
+  {
+    "id": "TC-FUNC-08",
+    "type": "有效性",
+    "title": "新增测试用户",
+    "steps": "调用 /test/user/save",
+    "input": "userId=9, username=testuser",
+    "expected": "code=200，可查询到该用户"
+  },
+  {
+    "id": "TC-FUNC-09",
+    "type": "有效性",
+    "title": "修改测试用户",
+    "steps": "调用 /test/user/update",
+    "input": "userId=9, username=testuser2",
+    "expected": "code=200"
+  },
+  {
+    "id": "TC-FUNC-10",
+    "type": "有效性",
+    "title": "删除测试用户",
+    "steps": "调用 /test/user/{userId}",
+    "input": "userId=9",
+    "expected": "code=200"
+  },
+  {
+    "id": "TC-FUNC-11",
+    "type": "有效性",
+    "title": "学生登录用户端",
+    "steps": "学生 2021001 登录",
+    "input": "2021001 / 123456",
+    "expected": "code=200，返回 token 与身份"
+  },
+  {
+    "id": "TC-FUNC-12",
+    "type": "有效性",
+    "title": "学生查询本人成绩",
+    "steps": "打开成绩查询页",
+    "input": "无参数",
+    "expected": "code=200，返回 9 条成绩且不包含他人数据"
+  },
+  {
+    "id": "TC-FUNC-13",
+    "type": "有效性",
+    "title": "学生提交查分申请",
+    "steps": "选择数学，填写 10~200 字理由并提交",
+    "input": "courseId=MAT101，理由 24 字",
+    "expected": "code=200，生成状态为 PENDING 的申请"
+  },
+  {
+    "id": "TC-FUNC-14",
+    "type": "有效性",
+    "title": "教师受理查分（维持原成绩）",
+    "steps": "在待办中受理并选择 KEEP",
+    "input": "result=KEEP，意见 18 字",
+    "expected": "code=200，状态变为 ACCEPTED"
+  },
+  {
+    "id": "TC-FUNC-15",
+    "type": "无效性",
+    "title": "未授权访问管理接口",
+    "steps": "不带 token 直接访问学生列表",
+    "input": "无 Authorization 头",
+    "expected": "HTTP 401，拒绝访问"
+  },
+  {
+    "id": "TC-FUNC-16",
+    "type": "无效性",
+    "title": "错误密码登录",
+    "steps": "输入 admin / wrong123",
+    "input": "admin / wrong123",
+    "expected": "code=500，提示用户名或密码错误"
+  },
+  {
+    "id": "TC-FUNC-17",
+    "type": "无效性",
+    "title": "密码为空登录",
+    "steps": "密码留空提交",
+    "input": "admin / 空密码",
+    "expected": "code=500，拒绝登录"
+  },
+  {
+    "id": "TC-FUNC-18",
+    "type": "无效性",
+    "title": "新增已存在的学号",
+    "steps": "新增学号 2021001（已存在）",
+    "input": "studentId=2021001",
+    "expected": "code=500，主键冲突，新增失败"
+  },
+  {
+    "id": "TC-FUNC-19",
+    "type": "无效性",
+    "title": "新增学生缺少学号",
+    "steps": "不填 studentId 直接保存",
+    "input": "studentId 为空",
+    "expected": "code=500，数据库非空约束报错"
+  },
+  {
+    "id": "TC-FUNC-20",
+    "type": "无效性",
+    "title": "修改不存在的学生",
+    "steps": "修改学号 9999999",
+    "input": "studentId=9999999",
+    "expected": "code=500（影响 0 行），提示操作失败"
+  },
+  {
+    "id": "TC-FUNC-21",
+    "type": "无效性",
+    "title": "删除不存在的学生",
+    "steps": "删除学号 9999999",
+    "input": "studentIds=9999999",
+    "expected": "code=500（影响 0 行），提示操作失败"
+  },
+  {
+    "id": "TC-FUNC-22",
+    "type": "无效性",
+    "title": "查询不存在的学生详情",
+    "steps": "查询学号 9999999",
+    "input": "studentId=9999999",
+    "expected": "code=200，data 为 null"
+  },
+  {
+    "id": "TC-FUNC-23",
+    "type": "无效性",
+    "title": "学生越权访问管理端接口",
+    "steps": "用学生 token 访问 /system/student/list",
+    "input": "学生 token",
+    "expected": "HTTP 403，无权限"
+  },
+  {
+    "id": "TC-FUNC-24",
+    "type": "无效性",
+    "title": "查分理由长度不足",
+    "steps": "填写 2 字理由提交",
+    "input": "reason=太短",
+    "expected": "code=500，提示 10~200 字"
+  },
+  {
+    "id": "TC-FUNC-25",
+    "type": "无效性",
+    "title": "重复提交同一课程查分",
+    "steps": "对已有 PENDING 申请的历史课再次提交",
+    "input": "courseId=HIS101",
+    "expected": "code=500，提示勿重复提交"
+  },
+  {
+    "id": "TC-FUNC-26",
+    "type": "无效性",
+    "title": "修改查分中的成绩",
+    "steps": "修改 2021005 物理（PENDING）",
+    "input": "scoreId=SC20250101021",
+    "expected": "code=500，提示扣分中禁止修改"
+  },
+  {
+    "id": "TC-FUNC-27",
+    "type": "无效性",
+    "title": "成绩超出 0~100 范围",
+    "steps": "平时成绩输入 105",
+    "input": "usualScore=105",
+    "expected": "code=500，提示 0~100 整数"
+  }
+]
