@@ -61,7 +61,10 @@ export const api = {
   myAppeals: () => request('/appeals/mine'),
   appealList: (params) => request('/appeals', { params }),
   handleAppeal: (appealId, payload) => request(`/appeals/${appealId}/handle`, { method: 'PUT', body: payload }),
-  rejectAppeal: (appealId, payload) => request(`/appeals/${appealId}/reject`, { method: 'PUT', body: payload })
+  rejectAppeal: (appealId, payload) => request(`/appeals/${appealId}/reject`, { method: 'PUT', body: payload }),
+
+  aiStatus: () => request('/ai/status'),
+  aiChat: (payload) => request('/ai/chat', { method: 'POST', body: payload })
 }
 
 export default api

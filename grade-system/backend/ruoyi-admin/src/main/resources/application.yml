@@ -116,8 +116,18 @@ pagehelper:
 swagger:
   # 是否开启swagger
   enabled: true
-  # 请求前缀
-  pathMapping: /dev-api
+  # 请求前缀（直接访问 8080/swagger-ui 时留空；若经前端 /dev-api 代理访问则填 /dev-api）
+  pathMapping: ""
+
+# DeepSeek AI 助手
+deepseek:
+  # API Key：优先读环境变量 DEEPSEEK_API_KEY，也可直接填写 sk-xxxx
+  api-key: ${DEEPSEEK_API_KEY:}
+  base-url: https://api.deepseek.com
+  model: deepseek-chat
+  # 连接/读取超时（毫秒）
+  connect-timeout: 10000
+  read-timeout: 60000
 
 # 防盗链配置
 referer:

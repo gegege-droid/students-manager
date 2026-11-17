@@ -20,13 +20,17 @@ import com.ruoyi.system.domain.Student;
 import com.ruoyi.system.service.IStudentService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 学生管理Controller
- * 
+ *
  * @author grade-team
  * @date 2026-10-31
  */
+@Api(tags = "学生管理")
 @RestController
 @RequestMapping("/system/student")
 public class StudentController extends BaseController
@@ -37,6 +41,7 @@ public class StudentController extends BaseController
     /**
      * 查询学生管理列表
      */
+    @ApiOperation("查询学生列表")
     @PreAuthorize("@ss.hasPermi('system:student:list')")
     @GetMapping("/list")
     public TableDataInfo list(Student student)
@@ -49,6 +54,7 @@ public class StudentController extends BaseController
     /**
      * 导出学生管理列表
      */
+    @ApiOperation("导出学生列表")
     @PreAuthorize("@ss.hasPermi('system:student:export')")
     @Log(title = "学生管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -62,6 +68,9 @@ public class StudentController extends BaseController
     /**
      * 获取学生管理详细信息
      */
+    @ApiOperation("获取学生详细信息")
+    @ApiImplicitParam(name = "studentId", value = "学生学号", required = true,
+            dataType = "String", dataTypeClass = String.class, paramType = "path")
     @PreAuthorize("@ss.hasPermi('system:student:query')")
     @GetMapping(value = "/{studentId}")
     public AjaxResult getInfo(@PathVariable("studentId") String studentId)
@@ -72,6 +81,9 @@ public class StudentController extends BaseController
     /**
      * 新增学生管理
      */
+    @ApiOperation("新增学生")
+    @ApiImplicitParam(name = "student", value = "学生信息（JSON）", required = true,
+            dataType = "Student", dataTypeClass = Student.class, paramType = "body")
     @PreAuthorize("@ss.hasPermi('system:student:add')")
     @Log(title = "学生管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +95,9 @@ public class StudentController extends BaseController
     /**
      * 修改学生管理
      */
+    @ApiOperation("修改学生")
+    @ApiImplicitParam(name = "student", value = "学生信息（JSON，含 studentId）", required = true,
+            dataType = "Student", dataTypeClass = Student.class, paramType = "body")
     @PreAuthorize("@ss.hasPermi('system:student:edit')")
     @Log(title = "学生管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,6 +109,9 @@ public class StudentController extends BaseController
     /**
      * 删除学生管理
      */
+    @ApiOperation("删除学生")
+    @ApiImplicitParam(name = "studentIds", value = "学生学号（多个用逗号分隔）", required = true,
+            dataType = "String", dataTypeClass = String.class, paramType = "path")
     @PreAuthorize("@ss.hasPermi('system:student:remove')")
     @Log(title = "学生管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{studentIds}")

@@ -3,7 +3,7 @@
 本目录是实验三的独立交付工程，基于实验二的 RuoYi-Vue v3.9.1：
 
 - **管理端**：设计成绩管理数据库表，运行 `ruoyi-generator` 生成 6 个 CRUD 模块；
-- **用户侧（加分项）**：复用实验一的 Vue3 成绩管理前端，接入 RuoYi 后端，实现学生查成绩/申请查分、教师录成绩/改成绩/受理查分的完整闭环；另新增**个人中心**、**预测下次考试成绩**与**最近成绩趋势折线图**；
+- **用户侧（加分项）**：复用实验一的 Vue3 成绩管理前端，接入 RuoYi 后端，实现学生查成绩/申请查分、教师录成绩/改成绩/受理查分的完整闭环；另新增**个人中心**、**预测下次考试成绩**、**最近成绩趋势折线图**与 **AI 咨询助手（DeepSeek）**；
 - **文档**：按《网上招聘系统详细设计》样例撰写详细设计报告（≥15 页）。
 
 ## 一、目录结构
@@ -48,6 +48,26 @@ grade-system/
 | 教师 | T001 | 李老师 |
 
 > 门户账号复用 RuoYi `sys_user`，通过 `db/03_portal_accounts.sql` 写入；登录验证码已在 `sys_config` 中关闭。
+
+### AI 咨询助手（可选）
+
+> **重要：本仓库不包含任何 API Key。** 请使用你自己的 DeepSeek API Key，按下面步骤在本地配置；不要把他人的 Key 提交到仓库。
+
+用户端右下角蓝色按钮 → 右侧滑出对话栏，由 DeepSeek 提供回答。默认关闭，需要配置 API Key：
+
+1. 在 https://platform.deepseek.com/ 创建 Key；
+2. 新建 `backend/config/application.yml`（该目录已被 `.gitignore` 排除）：
+
+```yaml
+deepseek:
+  api-key: sk-你的key
+  model: deepseek-chat
+```
+
+或启动前设置环境变量 `DEEPSEEK_API_KEY`；
+3. 重启后端，打开 `http://localhost:5173`，学生/教师登录后点右下角按钮。
+
+> Key 只保存在服务端，前端通过 `/portal/ai/chat` 代理调用；未配置时对话栏会提示「尚未配置 API Key」。
 
 ## 三、快速启动
 

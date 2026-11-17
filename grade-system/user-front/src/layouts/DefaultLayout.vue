@@ -1,4 +1,5 @@
 <script setup>
+import AiAssistant from '@/components/AiAssistant.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
@@ -14,5 +15,6 @@ import AppSidebar from '@/components/AppSidebar.vue'
       </main>
     </div>
     <AppFooter />
+    <AiAssistant />
   </div>
 </template>
